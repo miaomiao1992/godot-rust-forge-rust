@@ -3,6 +3,13 @@
 [ext_resource type="Texture2D" uid="uid://jtv35tgbpj7w" path="res://enemies/slime/slime.png" id="1_5cis1"]
 [ext_resource type="AudioStream" uid="uid://danw3mjxeui24" path="res://enemies/slime/slime_death.wav" id="1_tlbim"]
 [ext_resource type="AudioStream" uid="uid://djpeklduyjt6w" path="res://enemies/slime/slime_hit.wav" id="2_8vu3v"]
+[ext_resource type="PackedScene" uid="uid://ckwdc7aitlg8x" path="res://general/item_pickup/item_pickup.tscn" id="3_7dabm"]
+
+[sub_resource type="DropRare" id="DropRare_wvhbo"]
+rare = 1.0
+min = 2
+max = 5
+item = ExtResource("3_7dabm")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tlbim"]
 size = Vector2(28, 30)
@@ -92,6 +99,7 @@ _data = {
 [node name="SlimeStandard" type="Enemy" unique_id=581637104]
 death_sound = ExtResource("1_tlbim")
 hit_sound = ExtResource("2_8vu3v")
+drop_items = Array[DropRare]([SubResource("DropRare_wvhbo")])
 collision_layer = 0
 collision_mask = 3
 
@@ -107,6 +115,14 @@ unique_name_in_owner = true
 position = Vector2(6, 15)
 target_position = Vector2(0, 12)
 collision_mask = 3
+
+[node name="PlayerSensor" type="PlayerSensor" parent="Sprite2D" unique_id=614670485]
+search_duration = 3.0
+unique_name_in_owner = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite2D/PlayerSensor" unique_id=215091890]
+position = Vector2(0, 6)
+polygon = PackedVector2Array(0, 0, 128, -50, 128, 50)
 
 [node name="DamageArea" type="DamageArea" parent="." unique_id=182861518]
 unique_name_in_owner = true
@@ -141,7 +157,7 @@ debug_color = Color(0.32292473, 0.70196074, 0.5036599, 0.41960785)
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1777210877]
 unique_name_in_owner = true
 libraries/ = SubResource("AnimationLibrary_qilbb")
-autoplay = &"stun"
+autoplay = &"walk"
 
 [node name="DecisionEngine" type="DecisionEngine" parent="." unique_id=1050552658 node_paths=PackedStringArray("enemy")]
 enemy = NodePath("..")

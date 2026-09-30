@@ -144,6 +144,11 @@ impl ICharacterBody2D for Player {
             .signals()
             .game_end()
             .connect_other(&*self, Self::release_player);
+
+        Message::singleton()
+            .signals()
+            .player_healed()
+            .connect_other(&*self, Self::on_player_healed);
     }
 
     fn input(&mut self, event: Gd<InputEvent>) {
@@ -270,6 +275,11 @@ impl ICharacterBody2D for Player {
 impl Player {
     #[signal]
     fn die();
+
+    fn on_player_healed(&mut self, amount: f32) {
+        let hp = self.hp + amount;
+        self.set_hp(hp);
+    }
 
     pub fn get_face_direction(&self) -> f32 {
         self.sprite

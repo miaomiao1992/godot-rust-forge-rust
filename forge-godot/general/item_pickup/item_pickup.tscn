@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://ckwdc7aitlg8x"]
+
+[ext_resource type="Texture2D" uid="uid://dj8s5hx42ysra" path="res://general/sprites/props_destructible.png" id="1_0sag8"]
+[ext_resource type="AudioStream" uid="uid://c8opqsd0t0onx" path="res://enemies/audio/health_up.wav" id="1_2wfbq"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ifow5"]
+bounce = 0.5
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wvhbo"]
+atlas = ExtResource("1_0sag8")
+region = Rect2(100, 6, 7, 6)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wvhbo"]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ifow5"]
+radius = 6.0
+
+[node name="ItemPickup" type="ItemPickUp" unique_id=840967666]
+audio = ExtResource("1_2wfbq")
+z_index = 2
+collision_layer = 0
+collision_mask = 3
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_ifow5")
+lock_rotation = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1901792433]
+scale = Vector2(2, 2)
+texture = SubResource("AtlasTexture_wvhbo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=830343453]
+shape = SubResource("CircleShape2D_wvhbo")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=55716633]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Area2D" unique_id=386634863]
+shape = SubResource("CircleShape2D_ifow5")
+debug_color = Color(0.6708822, 0.5067584, 0.13659102, 0.41960785)

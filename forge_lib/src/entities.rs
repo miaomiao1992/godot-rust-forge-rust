@@ -1,6 +1,7 @@
 pub mod ability_pickup;
 pub mod attack;
 pub mod audio_tirgger;
+pub mod boss_orchestractor;
 pub mod breakable;
 pub mod damage;
 pub mod door;
@@ -10,8 +11,10 @@ pub mod edge_detector;
 pub mod hit_particle;
 pub mod input_hints;
 pub mod interactive;
+pub(crate) mod item_pickup;
 pub mod light;
 pub mod player_camera;
+pub mod player_sensor;
 pub mod save_point;
 pub mod switch;
 pub mod wood;

@@ -18,6 +18,134 @@ colors = PackedColorArray(1, 0, 0, 1, 1, 1, 0, 1, 0.7804127, 0.37113446, 0.27726
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ifow5"]
 gradient = SubResource("Gradient_5axos")
 
+[sub_resource type="Animation" id="Animation_20266"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(60, 236)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Label:visible_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_1i8sr"]
+resource_name = "hiden"
+length = 0.5
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.4666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(60, 236), Vector2(60, 284)]
+}
+
+[sub_resource type="Animation" id="Animation_5axos"]
+resource_name = "show"
+length = 0.8
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(60, 284), Vector2(60, 236)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Label:visible_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5m7yq"]
+_data = {
+&"RESET": SubResource("Animation_20266"),
+&"hiden": SubResource("Animation_1i8sr"),
+&"show": SubResource("Animation_5axos")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_20266"]
+bg_color = Color(0.101960786, 0.101960786, 0.101960786, 0.92156863)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1i8sr"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wvhbo"]
+bg_color = Color(0.101960786, 0.101960786, 0.101960786, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ifow5"]
+bg_color = Color(0.6039216, 0.22745098, 0.22745098, 1)
+
 [node name="PlayerHud" type="PlayerHud" unique_id=2020831820]
 particle_setting = SubResource("HitParticleSetting_1i8sr")
 process_mode = 3
@@ -69,6 +197,67 @@ value = 1.0
 nine_patch_stretch = true
 texture_under = SubResource("GradientTexture2D_wvhbo")
 texture_progress = SubResource("GradientTexture2D_ifow5")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=1915515002]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = 14.0
+offset_right = 180.0
+offset_bottom = 43.000244
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="Control/VBoxContainer" unique_id=444703641]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_outline_size = 2
+theme_override_font_sizes/font_size = 12
+text = "Boss Name"
+horizontal_alignment = 1
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Control/VBoxContainer" unique_id=853595606]
+unique_name_in_owner = true
+libraries/ = SubResource("AnimationLibrary_5m7yq")
+autoplay = &"hiden"
+
+[node name="Hp" type="Control" parent="Control/VBoxContainer" unique_id=1421042946]
+layout_mode = 2
+
+[node name="HpHightlight" type="ProgressBar" parent="Control/VBoxContainer/Hp" unique_id=1939989926]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 0
+offset_right = 360.0
+offset_bottom = 10.0
+theme_override_styles/background = SubResource("StyleBoxFlat_20266")
+theme_override_styles/fill = SubResource("StyleBoxFlat_1i8sr")
+max_value = 1.0
+value = 0.68
+show_percentage = false
+
+[node name="ProgressBar" type="ProgressBar" parent="Control/VBoxContainer/Hp" unique_id=2067560828]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 0
+offset_right = 360.0
+offset_bottom = 10.0
+theme_override_styles/background = SubResource("StyleBoxFlat_wvhbo")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ifow5")
+max_value = 1.0
+value = 0.5
+show_percentage = false
 
 [node name="Button" type="Button" parent="." unique_id=975475362]
 unique_name_in_owner = true

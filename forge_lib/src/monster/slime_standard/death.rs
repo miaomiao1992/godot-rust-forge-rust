@@ -1,4 +1,4 @@
-use godot::{classes::InputEvent, prelude::*};
+use godot::prelude::*;
 
 use crate::monster::enemy_state::IStateTrait;
 
@@ -52,8 +52,8 @@ impl SlimeDeathState {
         self.timer = 0.0;
         self.calc_velocity();
     }
-    #[func]
-    fn exit(&mut self) {}
+    // #[func]
+    // fn exit(&mut self) {}
     #[func]
     fn update(&mut self, delta: f32) {
         self.timer += delta as f64;
@@ -66,6 +66,6 @@ impl SlimeDeathState {
             }
         }
     }
-    #[func]
-    fn handle_input(&mut self, _event: Gd<InputEvent>) {}
+    // #[func]
+    // fn handle_input(&mut self, _event: Gd<InputEvent>) {}
 }

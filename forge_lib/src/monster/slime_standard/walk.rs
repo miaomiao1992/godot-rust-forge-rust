@@ -1,4 +1,4 @@
-use godot::{classes::InputEvent, prelude::*};
+use godot::prelude::*;
 
 use crate::monster::enemy_state::IStateTrait;
 
@@ -25,11 +25,11 @@ impl SlimeWalkState {
         self.play_animation("walk");
     }
 
-    #[func]
-    fn re_enter(&mut self) {}
+    // #[func]
+    // fn re_enter(&mut self) {}
 
-    #[func]
-    fn exit(&mut self) {}
+    // #[func]
+    // fn exit(&mut self) {}
     #[func]
     fn update(&mut self, _delta: f32) {
         if let Some(mut enemy) = self.get_owner_node() {
@@ -45,6 +45,6 @@ impl SlimeWalkState {
             }
         }
     }
-    #[func]
-    fn handle_input(&mut self, _event: Gd<InputEvent>) {}
+    // #[func]
+    // fn handle_input(&mut self, _event: Gd<InputEvent>) {}
 }

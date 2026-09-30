@@ -13,7 +13,7 @@ config_version=5
 config/name="forge_godot_linux"
 run/main_scene="uid://cu7ofetipfdnf"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="uid://4dwfw3bxwqvx"
 
 [audio]
 

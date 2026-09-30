@@ -3,16 +3,22 @@ use godot::{
         AnimationPlayer, AudioStream, CharacterBody2D, Engine, ICharacterBody2D, Sprite2D,
         notify::CanvasItemNotification,
     },
+    global::{randf, randf_range},
     prelude::*,
 };
 
 use crate::{
-    entities::{attack::AttackArea, damage::DamageArea, edge_detector::EdgeDetector},
+    entities::{
+        attack::AttackArea, damage::DamageArea, edge_detector::EdgeDetector,
+        item_pickup::ItemPickUp, player_sensor::PlayerSensor,
+    },
     message::Message,
     monster::{
         blackboard::Blackboard, decision_engine::DecisionEngine,
         enemy_state_machine::EnemyStateMachine,
     },
+    player::Player,
+    resource::drop_rare::DropRare,
 };
 
 #[derive(GodotClass)]
@@ -39,6 +45,11 @@ pub(crate) struct Enemy {
     #[export]
     hit_sound: Option<Gd<AudioStream>>,
 
+    #[export_group(name = "掉落")]
+    #[export]
+    #[init(val = Array::default())]
+    drop_items: Array<Gd<DropRare>>,
+
     //normal var
     #[init(node = "%Sprite2D")]
     body: OnReady<Gd<Sprite2D>>,
@@ -50,6 +61,8 @@ pub(crate) struct Enemy {
     attack_area: OnReady<Gd<AttackArea>>,
     #[init(node = "%EdgeDetector")]
     edge_detector: OnReady<Gd<EdgeDetector>>,
+    #[init(node = "%PlayerSensor")]
+    player_sensor: OnReady<Gd<PlayerSensor>>,
 
     //ai
     #[init(node = "%StateMachine")]
@@ -65,9 +78,13 @@ impl Enemy {
     #[signal]
     fn direction_change(new_dir: Vector2);
     #[signal]
-    fn was_hit();
+    pub fn was_hit();
     #[signal]
-    fn was_killed();
+    pub fn was_killed();
+
+    #[signal]
+    pub fn health_change(hp: f32, max_hp: f32);
+
     #[func]
     fn take_damage(&mut self, pos: Vector2, _dir: Vector2, attack_area: Gd<AttackArea>) {
         if let Some(board) = self.blackboard.as_mut() {
@@ -77,10 +94,13 @@ impl Enemy {
             let health = board.bind().get_health() - attack_area.bind().get_damage();
             board.bind_mut().set_health(health);
 
+            let max_health = self.health;
+            self.signals().health_change().emit(health, max_health);
             if let Some(ref audio) = if health <= 0.0 {
                 //同步取消？
                 self.damage_area.queue_free();
                 self.attack_area.queue_free();
+                self.create_drop();
                 self.signals().was_killed().emit();
                 self.death_sound.clone()
             } else {
@@ -98,6 +118,33 @@ impl Enemy {
 }
 
 impl Enemy {
+    fn create_drop(&mut self) {
+        let center = self.base().get_global_position();
+        godot_print!("生成掉落");
+        for c in self.drop_items.iter_shared() {
+            if randf() < c.bind().rare as f64 {
+                let scene_packed = c.bind().item.clone();
+                godot_print!("命中几率");
+                for _ in c.bind().min..c.bind().max {
+                    let mut drop_item = scene_packed.instantiate_as::<ItemPickUp>();
+                    drop_item.set_global_position(center);
+                    drop_item.apply_impulse(Vector2::new(randf_range(-10.0, 10.0) as f32, -30.0));
+
+                    if let Some(mut root) = self.base().get_tree().get_root() {
+                        root.add_child(&drop_item);
+                    }
+                }
+            }
+        }
+    }
+    pub fn get_health_stats(&self) -> (f32, f32) {
+        if let Some(board) = self.blackboard.as_ref() {
+            return (board.bind().get_health(), self.health);
+        }
+
+        (1.0, 1.0)
+    }
+
     fn setup(&mut self) {
         let mut blackboard = Blackboard::new_gd();
         blackboard.bind_mut().set_health(self.health);
@@ -109,6 +156,30 @@ impl Enemy {
             .signals()
             .edge_detect()
             .connect_other(&*self, Self::on_edge_detected);
+        self.player_sensor
+            .signals()
+            .player_entered()
+            .connect_other(&*self, Self::on_player_enter);
+
+        self.player_sensor
+            .signals()
+            .player_exited()
+            .connect_other(&*self, Self::on_player_exited);
+    }
+
+    fn on_player_enter(&mut self, player: Gd<Node2D>) {
+        if let Some(blackboard) = self.blackboard.as_mut()
+            && let Ok(player) = player.try_cast::<Player>()
+        {
+            // godot_print!("发现了玩家");
+            blackboard.bind_mut().set_target(Some(player));
+        }
+    }
+    fn on_player_exited(&mut self) {
+        if let Some(blackboard) = self.blackboard.as_mut() {
+            godot_print!("丢失玩家");
+            blackboard.bind_mut().set_target(None);
+        }
     }
 
     fn on_edge_detected(&mut self) {
@@ -195,6 +266,16 @@ impl ICharacterBody2D for Enemy {
             let mut velocity = self.base().get_velocity();
             velocity += self.base().get_gravity() * Vector2::splat(delta as f32);
             self.base_mut().set_velocity(velocity);
+        }
+
+        let pos = self.base().get_global_position();
+        if let Some(board) = self.blackboard.as_mut() {
+            board.bind_mut().update_distance_to_target(pos);
+            let distance_to_player = board.bind().get_distance_to_target();
+
+            if distance_to_player > 0.0 {
+                // godot_print!("距离玩家: {distance_to_player}");
+            }
         }
 
         self.base_mut().move_and_slide();

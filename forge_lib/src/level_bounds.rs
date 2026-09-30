@@ -4,7 +4,7 @@ use godot::{classes::Engine, obj::WithBaseField, prelude::*};
 #[class(tool, init, base = Node2D)]
 pub struct LevelBounds {
     base: Base<Node2D>,
-    #[export(range = (480.0, 2048.0, 32.0, suffix="px"))]
+    #[export(range = (480.0, 4096.0, 32.0, suffix="px"))]
     #[var(set, get)]
     #[init(val = 480.0)]
     width: f32,

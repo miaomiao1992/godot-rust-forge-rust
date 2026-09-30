@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://lyslvee0784i" path="res://scenes/player_spawn.tscn" id="8_j3mwe"]
 [ext_resource type="AudioStream" uid="uid://bfw1oiiam3o32" path="res://music/forest_01.ogg" id="9_afb11"]
 [ext_resource type="PackedScene" uid="uid://ctjtwr34xirg" path="res://levels/props/dummy.tscn" id="10_ye2jv"]
+[ext_resource type="PackedScene" uid="uid://dfinajco8a70" path="res://enemies/slime/slime.tscn" id="11_rxgjd"]
+[ext_resource type="PackedScene" uid="uid://nc5vwyf8tex8" path="res://enemies/slime/slime_standard.tscn" id="12_2y0ra"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_518qc"]
 texture = ExtResource("1_xby24")
@@ -988,7 +990,7 @@ visibility_rect = Rect2(-400, -100, 800, 200)
 process_material = SubResource("ParticleProcessMaterial_ifow5")
 
 [node name="PlayerSpawn" parent="." unique_id=2011755480 instance=ExtResource("8_j3mwe")]
-position = Vector2(1670, 67)
+position = Vector2(228, 296)
 
 [node name="AudioTrigger" type="AudioTrigger" parent="." unique_id=769279318]
 stream = ExtResource("9_afb11")
@@ -996,3 +998,11 @@ effect_type = "LARGE"
 
 [node name="Dummy" parent="." unique_id=1891621179 instance=ExtResource("10_ye2jv")]
 position = Vector2(1108, 167)
+
+[node name="Enemies" type="Node" parent="." unique_id=728659264]
+
+[node name="Slime" parent="Enemies" unique_id=472927068 instance=ExtResource("11_rxgjd")]
+position = Vector2(738, 265)
+
+[node name="SlimeStandard" parent="Enemies" unique_id=581637104 instance=ExtResource("12_2y0ra")]
+position = Vector2(1669, 71)

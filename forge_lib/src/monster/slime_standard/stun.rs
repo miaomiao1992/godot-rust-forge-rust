@@ -1,4 +1,4 @@
-use godot::{classes::InputEvent, prelude::*};
+use godot::prelude::*;
 
 use crate::monster::enemy_state::IStateTrait;
 
@@ -84,6 +84,6 @@ impl SlimeStunState {
             }
         }
     }
-    #[func]
-    fn handle_input(&mut self, _event: Gd<InputEvent>) {}
+    // #[func]
+    // fn handle_input(&mut self, _event: Gd<InputEvent>) {}
 }

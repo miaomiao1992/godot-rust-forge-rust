@@ -40,4 +40,16 @@ impl Message {
 
     #[signal]
     pub fn camera_shake(strength: f64);
+
+    #[signal]
+    pub fn boss_battle_start(boss_name: String);
+
+    #[signal]
+    pub fn boss_battle_end();
+
+    #[signal]
+    pub fn boss_health_change(hp: f32, max_hp: f32);
+
+    #[signal]
+    pub fn player_healed(amount: f32);
 }
