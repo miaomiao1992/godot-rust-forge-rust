@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://dfinajco8a70" path="res://enemies/slime/slime.tscn" id="19_x2tju"]
 [ext_resource type="PackedScene" uid="uid://nc5vwyf8tex8" path="res://enemies/slime/slime_standard.tscn" id="20_x2tju"]
 [ext_resource type="AudioStream" uid="uid://cnadirl2opvvs" path="res://boss/audio/nega_pink_box_boss.wav" id="21_wm6m6"]
+[ext_resource type="PackedScene" uid="uid://c0pk6mogy2yq7" path="res://boss/nega_hero.tscn" id="23_vwj6b"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wvhbo"]
 size = Vector2(64, 224)
@@ -81,7 +82,7 @@ tile_map_data = PackedByteArray("AAAKAAYAAAAAAAgAAAAKAAcAAAAIAAoAAAAKAAgAAAAAAAo
 tile_set = ExtResource("1_qchbg")
 
 [node name="PlayerSpawn" parent="." unique_id=2011755480 instance=ExtResource("4_mm0a5")]
-position = Vector2(79, 583)
+position = Vector2(43, 614)
 
 [node name="LevelBounds" type="LevelBounds" parent="." unique_id=942564952]
 width = 2592.0
@@ -227,3 +228,7 @@ debug_color = Color(0.42215183, 0.6023615, 0.16786098, 0.41960785)
 
 [node name="ItemPickup" parent="." unique_id=840967666 instance=ExtResource("19_ocmmj")]
 position = Vector2(-325, 525)
+
+[node name="NegaHero" parent="." unique_id=695850978 instance=ExtResource("23_vwj6b")]
+z_index = 2
+position = Vector2(-516, 614)

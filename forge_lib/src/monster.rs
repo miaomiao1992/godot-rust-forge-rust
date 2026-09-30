@@ -8,3 +8,5 @@ pub(crate) mod enemy_state_machine;
 //monsters
 pub(crate) mod slime;
 pub(crate) mod slime_standard;
+
+pub(crate) mod nega_boss;
