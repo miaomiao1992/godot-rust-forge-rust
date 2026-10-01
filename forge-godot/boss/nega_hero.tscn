@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dhu0wx3v2p0h4" path="res://boss/sprites/nega_pink_box.png" id="1_scbf6"]
 [ext_resource type="Texture2D" uid="uid://ci52r66xsjf4k" path="res://general/sprites/weapon_smears.png" id="2_yt5t3"]
+[ext_resource type="PackedScene" uid="uid://ckwdc7aitlg8x" path="res://general/item_pickup/item_pickup.tscn" id="3_yt5t3"]
 
 [sub_resource type="Animation" id="Animation_m0ctb"]
 length = 0.001
@@ -40,6 +41,30 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AttackArea:monitorable")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_bg3y3"]
@@ -82,6 +107,18 @@ tracks/2/keys = {
 "update": 1,
 "values": [true, false]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AttackArea:monitorable")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.20472449, 0.3, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
 
 [sub_resource type="Animation" id="Animation_py1kv"]
 resource_name = "death"
@@ -98,6 +135,47 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [36, 37, 38, 39, 40, 41, 48]
+}
+
+[sub_resource type="Animation" id="Animation_scbf6"]
+resource_name = "hurt"
+length = 0.3
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [20, 20, 20]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D/Smear:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(18.892157, 18.892157, 18.892157, 1), Color(0.97336197, 0.97336197, 0.97336197, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_k8rjj"]
@@ -153,45 +231,80 @@ _data = {
 &"RESET": SubResource("Animation_m0ctb"),
 &"attack": SubResource("Animation_bg3y3"),
 &"death": SubResource("Animation_py1kv"),
+&"hurt": SubResource("Animation_scbf6"),
 &"idle": SubResource("Animation_k8rjj"),
 &"walk": SubResource("Animation_bpq6v")
 }
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ifow5"]
+size = Vector2(34, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wvhbo"]
+size = Vector2(73, 20)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wvhbo"]
 radius = 2.0
 height = 16.0
 
-[node name="NegaHero" type="CharacterBody2D" unique_id=695850978]
+[sub_resource type="CircleShape2D" id="CircleShape2D_wvhbo"]
+radius = 200.2024
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_abi3o"]
+size = Vector2(130, 52)
+
+[sub_resource type="DropRare" id="DropRare_wvhbo"]
+rare = 1.0
+min = 10
+max = 20
+item = ExtResource("3_yt5t3")
+
+[node name="NegaHero" type="NegaBoss" unique_id=635793556 node_paths=PackedStringArray("state_machine", "damage")]
+state_machine = NodePath("BossStateMachine")
+damage = NodePath("DamageArea")
+max_hp = 5.0
 collision_layer = 0
 collision_mask = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=966816439]
-position = Vector2(-40, -80)
+unique_name_in_owner = true
 texture = ExtResource("1_scbf6")
 centered = false
+offset = Vector2(-40, -80)
 hframes = 8
 vframes = 7
 
 [node name="Smear" type="Sprite2D" parent="Sprite2D" unique_id=147893479]
-position = Vector2(5, -19)
+position = Vector2(-40, -94)
 texture = ExtResource("2_yt5t3")
 centered = false
 hframes = 8
 frame = 4
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1056899967]
+unique_name_in_owner = true
 libraries/ = SubResource("AnimationLibrary_yyw2w")
 autoplay = &"idle"
 
 [node name="DamageArea" type="DamageArea" parent="." unique_id=1056833355]
+unique_name_in_owner = true
+visible = false
 collision_layer = 0
-collision_mask = 32
+collision_mask = 16
 monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea" unique_id=1480939924]
+position = Vector2(0, -26)
+shape = SubResource("RectangleShape2D_ifow5")
 
 [node name="AttackArea" type="AttackArea" parent="." unique_id=176346671]
 collision_layer = 64
 collision_mask = 0
 monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=953804851]
+position = Vector2(59.5, -32)
+shape = SubResource("RectangleShape2D_wvhbo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=998583687]
 position = Vector2(0, -2)
@@ -199,11 +312,40 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_wvhbo")
 
 [node name="BossStateMachine" type="BossStateMachine" parent="." unique_id=1989407048]
+is_debug = true
 
 [node name="Idle" type="BossIdle" parent="BossStateMachine" unique_id=546703604]
 
 [node name="Walk" type="BossWalk" parent="BossStateMachine" unique_id=1221806515]
+speed = 150.0
 
-[node name="Attack" type="Node" parent="BossStateMachine" unique_id=828305111]
+[node name="Attack" type="BossAttack" parent="BossStateMachine" unique_id=1888927242]
 
-[node name="Death" type="Node" parent="BossStateMachine" unique_id=937063454]
+[node name="Death" type="BossDeath" parent="BossStateMachine" unique_id=854930721]
+
+[node name="Hurt" type="BossHurt" parent="BossStateMachine" unique_id=290064252]
+
+[node name="PlayerDetector" type="Area2D" parent="." unique_id=1628783670]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector" unique_id=555959194]
+position = Vector2(0, -39)
+shape = SubResource("CircleShape2D_wvhbo")
+debug_color = Color(0, 0.6, 0.69803923, 0)
+
+[node name="AttackRange" type="Area2D" parent="." unique_id=1540158118]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange" unique_id=1680017183]
+position = Vector2(0, -26)
+shape = SubResource("RectangleShape2D_abi3o")
+debug_color = Color(0.41276652, 0.601136, 0.22699857, 0.41960785)
+
+[node name="MagicDrop" type="MagicDrop" parent="." unique_id=1607304537 node_paths=PackedStringArray("agent")]
+agent = NodePath("..")
+drop_items = Array[DropRare]([SubResource("DropRare_wvhbo")])

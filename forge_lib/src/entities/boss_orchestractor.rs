@@ -5,7 +5,9 @@ use godot::{
 };
 
 use crate::{
-    entities::audio_tirgger::AudioEffectType, message::Message, monster::enemy::Enemy,
+    entities::audio_tirgger::AudioEffectType,
+    message::Message,
+    monster::{enemy::Enemy, nega_boss::NegaBoss},
     player::Player,
 };
 
@@ -15,7 +17,7 @@ pub(crate) struct BossOrchestractor {
     base: Base<Area2D>,
 
     #[export]
-    boss: OnEditor<Gd<Enemy>>,
+    boss: OnEditor<Gd<NegaBoss>>,
 
     #[export]
     audio: OnEditor<Gd<AudioStream>>,

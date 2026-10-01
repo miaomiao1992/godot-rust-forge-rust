@@ -14,6 +14,10 @@ pub(crate) struct BossStateMachine {
     #[export]
     #[init(val = BossState::default())]
     init_state: BossState,
+
+    #[export]
+    #[init(val = false)]
+    is_debug: bool,
 }
 
 #[godot_api]
@@ -62,6 +66,9 @@ impl BossStateMachine {
     pub fn travel(&mut self, next_state: BossState) {
         self.base_mut().set_process_mode(ProcessMode::DISABLED);
         if let Some(mut current_state) = self.current_state.take() {
+            if self.is_debug {
+                godot_print!("Boss 退出状态： {:?}", current_state.get_name());
+            }
             current_state.try_call("exited", &[]).ok();
         }
 
@@ -78,6 +85,9 @@ impl BossStateMachine {
 
     pub fn enter_next_state(&mut self, next_state: BossState) {
         if let Some(mut state_node) = self.get_state_node(next_state) {
+            if self.is_debug {
+                godot_print!("Boss 进入状态: {:?}", next_state);
+            }
             state_node.try_call_deferred("entered", &[]).ok();
             self.current_state = Some(state_node);
         }
@@ -98,6 +108,7 @@ pub(crate) enum BossState {
     Walk,
     Attack,
     Death,
+    Hurt,
 }
 
 impl From<BossState> for &str {
@@ -107,6 +118,7 @@ impl From<BossState> for &str {
             BossState::Walk => "Walk",
             BossState::Attack => "Attack",
             BossState::Death => "Death",
+            BossState::Hurt => "Hurt",
         }
     }
 }

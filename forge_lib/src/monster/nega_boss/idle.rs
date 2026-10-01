@@ -6,8 +6,6 @@ use crate::monster::nega_boss::boss_state::IBossState;
 #[class(init, base = Node)]
 pub(super) struct BossIdle {
     base: Base<Node>,
-    #[init(val = 5.0)]
-    duration: f32,
 }
 
 impl IBossState for BossIdle {}
@@ -16,23 +14,21 @@ impl IBossState for BossIdle {}
 impl BossIdle {
     #[func]
     fn entered(&mut self) {
-        godot_print!("进去idle");
+        self.play_anim("idle");
+        self.get_agent().set_velocity(Vector2::ZERO);
     }
 
     #[func]
-    fn exited(&mut self) {
-        godot_print!("退出idle");
-    }
+    fn exited(&mut self) {}
 
     #[func]
-    fn update(&mut self, delta: f64) -> Variant {
-        let delta = delta as f32;
-        self.duration -= delta;
-
-        if self.duration <= 0.0 {
+    fn update(&mut self, _delta: f64) -> Variant {
+        if self.get_target().is_some() {
+            if self.get_agent().bind().is_in_attack_range() {
+                return "Attack".to_variant();
+            }
             return "Walk".to_variant();
         }
-
         Variant::nil()
     }
 }
