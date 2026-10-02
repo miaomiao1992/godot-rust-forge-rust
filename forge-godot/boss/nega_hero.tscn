@@ -2,7 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://dhu0wx3v2p0h4" path="res://boss/sprites/nega_pink_box.png" id="1_scbf6"]
 [ext_resource type="Texture2D" uid="uid://ci52r66xsjf4k" path="res://general/sprites/weapon_smears.png" id="2_yt5t3"]
+[ext_resource type="AudioStream" uid="uid://fcm8nykp1k2l" path="res://boss/audio/charge.wav" id="3_bg3y3"]
 [ext_resource type="PackedScene" uid="uid://ckwdc7aitlg8x" path="res://general/item_pickup/item_pickup.tscn" id="3_yt5t3"]
+[ext_resource type="AudioStream" uid="uid://bxbnvjb7lrm8w" path="res://boss/audio/dash.wav" id="4_py1kv"]
 
 [sub_resource type="Animation" id="Animation_m0ctb"]
 length = 0.001
@@ -120,6 +122,35 @@ tracks/3/keys = {
 "values": [false, true, false]
 }
 
+[sub_resource type="Animation" id="Animation_yo7jr"]
+resource_name = "dash"
+length = 0.1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [19]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D/Smear:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
 [sub_resource type="Animation" id="Animation_py1kv"]
 resource_name = "death"
 length = 1.3
@@ -137,6 +168,35 @@ tracks/0/keys = {
 "values": [36, 37, 38, 39, 40, 41, 48]
 }
 
+[sub_resource type="Animation" id="Animation_yt5t3"]
+resource_name = "fall"
+length = 0.1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [18]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D/Smear:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
 [sub_resource type="Animation" id="Animation_scbf6"]
 resource_name = "hurt"
 length = 0.3
@@ -148,10 +208,10 @@ tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [20, 20, 20]
+"values": [20]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -208,6 +268,35 @@ tracks/1/keys = {
 "values": [false]
 }
 
+[sub_resource type="Animation" id="Animation_yyw2w"]
+resource_name = "jump"
+length = 0.5
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [14, 15, 16, 17, 18]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath("Sprite2D/Smear:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
 [sub_resource type="Animation" id="Animation_bpq6v"]
 resource_name = "walk"
 length = 0.8
@@ -230,9 +319,12 @@ tracks/0/keys = {
 _data = {
 &"RESET": SubResource("Animation_m0ctb"),
 &"attack": SubResource("Animation_bg3y3"),
+&"dash": SubResource("Animation_yo7jr"),
 &"death": SubResource("Animation_py1kv"),
+&"fall": SubResource("Animation_yt5t3"),
 &"hurt": SubResource("Animation_scbf6"),
 &"idle": SubResource("Animation_k8rjj"),
+&"jump": SubResource("Animation_yyw2w"),
 &"walk": SubResource("Animation_bpq6v")
 }
 
@@ -240,7 +332,7 @@ _data = {
 size = Vector2(34, 50)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wvhbo"]
-size = Vector2(73, 20)
+size = Vector2(106.5, 20)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wvhbo"]
 radius = 2.0
@@ -254,14 +346,16 @@ size = Vector2(130, 52)
 
 [sub_resource type="DropRare" id="DropRare_wvhbo"]
 rare = 1.0
-min = 10
-max = 20
+min = 20
+max = 60
 item = ExtResource("3_yt5t3")
 
-[node name="NegaHero" type="NegaBoss" unique_id=635793556 node_paths=PackedStringArray("state_machine", "damage")]
+[node name="NegaHero" type="NegaBoss" unique_id=984718767 node_paths=PackedStringArray("state_machine", "damage", "attack")]
 state_machine = NodePath("BossStateMachine")
 damage = NodePath("DamageArea")
-max_hp = 5.0
+attack = NodePath("AttackArea")
+hp = 100.0
+max_hp = 100.0
 collision_layer = 0
 collision_mask = 3
 
@@ -285,7 +379,7 @@ unique_name_in_owner = true
 libraries/ = SubResource("AnimationLibrary_yyw2w")
 autoplay = &"idle"
 
-[node name="DamageArea" type="DamageArea" parent="." unique_id=1056833355]
+[node name="DamageArea" type="DamageArea" parent="." unique_id=2009786367]
 unique_name_in_owner = true
 visible = false
 collision_layer = 0
@@ -296,34 +390,43 @@ monitorable = false
 position = Vector2(0, -26)
 shape = SubResource("RectangleShape2D_ifow5")
 
-[node name="AttackArea" type="AttackArea" parent="." unique_id=176346671]
+[node name="AttackArea" type="AttackArea" parent="." unique_id=873110036]
+unique_name_in_owner = true
 collision_layer = 64
 collision_mask = 0
 monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=953804851]
-position = Vector2(59.5, -32)
+position = Vector2(56.75, -32)
 shape = SubResource("RectangleShape2D_wvhbo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=998583687]
+unique_name_in_owner = true
 position = Vector2(0, -2)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_wvhbo")
 
-[node name="BossStateMachine" type="BossStateMachine" parent="." unique_id=1989407048]
+[node name="BossStateMachine" type="BossStateMachine" parent="." unique_id=1325058252]
 is_debug = true
 
-[node name="Idle" type="BossIdle" parent="BossStateMachine" unique_id=546703604]
+[node name="Idle" type="BossIdle" parent="BossStateMachine" unique_id=1718215764]
 
-[node name="Walk" type="BossWalk" parent="BossStateMachine" unique_id=1221806515]
-speed = 150.0
+[node name="Walk" type="BossWalk" parent="BossStateMachine" unique_id=237939160]
 
-[node name="Attack" type="BossAttack" parent="BossStateMachine" unique_id=1888927242]
+[node name="Attack" type="BossAttack" parent="BossStateMachine" unique_id=1782332369]
 
-[node name="Death" type="BossDeath" parent="BossStateMachine" unique_id=854930721]
+[node name="Death" type="BossDeath" parent="BossStateMachine" unique_id=197974480]
 
-[node name="Hurt" type="BossHurt" parent="BossStateMachine" unique_id=290064252]
+[node name="Hurt" type="BossHurt" parent="BossStateMachine" unique_id=1907131856]
+
+[node name="Jump" type="BossJump" parent="BossStateMachine" unique_id=2012825087]
+
+[node name="Fall" type="BossFall" parent="BossStateMachine" unique_id=1714122167]
+audio = ExtResource("3_bg3y3")
+
+[node name="Dash" type="BossDash" parent="BossStateMachine" unique_id=145248228]
+audio = ExtResource("4_py1kv")
 
 [node name="PlayerDetector" type="Area2D" parent="." unique_id=1628783670]
 unique_name_in_owner = true
@@ -338,6 +441,7 @@ debug_color = Color(0, 0.6, 0.69803923, 0)
 
 [node name="AttackRange" type="Area2D" parent="." unique_id=1540158118]
 unique_name_in_owner = true
+visible = false
 collision_layer = 0
 collision_mask = 4
 
@@ -346,6 +450,7 @@ position = Vector2(0, -26)
 shape = SubResource("RectangleShape2D_abi3o")
 debug_color = Color(0.41276652, 0.601136, 0.22699857, 0.41960785)
 
-[node name="MagicDrop" type="MagicDrop" parent="." unique_id=1607304537 node_paths=PackedStringArray("agent")]
+[node name="MagicDrop" type="MagicDrop" parent="." unique_id=1748684967 node_paths=PackedStringArray("agent")]
 agent = NodePath("..")
 drop_items = Array[DropRare]([SubResource("DropRare_wvhbo")])
+range = 50.0

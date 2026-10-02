@@ -8,14 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://45dh57ttxsqk" path="res://general/door_and_open/switch.tscn" id="5_mm0a5"]
 [ext_resource type="PackedScene" uid="uid://ctjtwr34xirg" path="res://levels/props/dummy.tscn" id="6_mrac1"]
 [ext_resource type="PackedScene" uid="uid://d3nndvpe73n81" path="res://general/save_point/save_point.tscn" id="6_o6wi6"]
-[ext_resource type="HitParticleSetting" uid="uid://k26ecg1rtb4" path="res://general/visual_effect/particle_settings/hit_particle_setting_small.tres" id="7_2bfhc"]
-[ext_resource type="AudioStream" uid="uid://dg3ow1sp3jqga" path="res://music/dungeon_01.ogg" id="7_emj6c"]
-[ext_resource type="HitParticleSetting" uid="uid://cpi7sdopbcndq" path="res://general/visual_effect/particle_settings/hit_particle_setting_mid.tres" id="8_osidk"]
 [ext_resource type="PackedScene" uid="uid://chl13gog1lb34" path="res://levels/props/crate.tscn" id="9_2q4k0"]
 [ext_resource type="PackedScene" uid="uid://yjycbodsd5se" path="res://levels/props/spike_dummy.tscn" id="10_j30dx"]
-[ext_resource type="HitParticleSetting" uid="uid://clt5fxf8xeepf" path="res://general/visual_effect/particle_settings/hit_particle_setting_stone_small.tres" id="12_fn4oh"]
-[ext_resource type="HitParticleSetting" uid="uid://bijgg1l5ugty0" path="res://general/visual_effect/particle_settings/hit_particle_setting_stone.tres" id="13_j30dx"]
-[ext_resource type="AudioStream" uid="uid://ydi1djnh6xjj" path="res://general/audio/hit.wav" id="13_k63md"]
 [ext_resource type="PackedScene" uid="uid://lq67up5twa32" path="res://levels/props/dun_crate.tscn" id="16_d3jfy"]
 [ext_resource type="PackedScene" uid="uid://cm7ywhal1otp8" path="res://general/ability_pickup/ability_pickup.tscn" id="19_q6c7b"]
 [ext_resource type="PackedScene" uid="uid://dfinajco8a70" path="res://enemies/slime/slime.tscn" id="19_x2tju"]
@@ -26,14 +20,10 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wvhbo"]
 size = Vector2(64, 224)
 
-[sub_resource type="HitParticleSetting" id="HitParticleSetting_x1amm"]
-count = 20
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ifow5"]
-size = Vector2(100, 452)
+size = Vector2(274, 452)
 
-[node name="playground" type="Level" unique_id=1036710843]
-theme = "Dark"
+[node name="playground" type="Node2D" unique_id=1036710843]
 
 [node name="Tilemaps" type="Node" parent="." unique_id=619683446]
 
@@ -60,13 +50,9 @@ metadata/_edit_group_ = true
 tile_map_data = PackedByteArray("AAD///z/AAAQAA0AAAD///3/AAAQAA0AAAAAAPz/AAARAA4AAAAAAP3/AAARAA4AAAD///n/AAAQAA0AAAD///r/AAAQAA0AAAD///v/AAAQAA0AAAAAAPn/AAARAA4AAAAAAPr/AAARAA4AAAAAAPv/AAARAA4AAAAAAP7/AAAJAAoAAAD///7/AAAIAAoAAAAAAP//AAABAA4AAAD/////AAAAAA4AAAD//wAAAAAEAA4AAAA=")
 tile_set = ExtResource("1_qchbg")
 
-[node name="Breakable" type="Breakable" parent="Tilemaps/Wall_break" unique_id=431439096]
-hp = 5.0
-particles = Array[HitParticleSetting]([ExtResource("13_j30dx"), ExtResource("12_fn4oh")])
+[node name="Breakable" type="Node2D" parent="Tilemaps/Wall_break" unique_id=431439096]
 
-[node name="DamageArea" type="DamageArea" parent="Tilemaps/Wall_break/Breakable" unique_id=1487517572]
-audio = ExtResource("13_k63md")
-offset = Vector2(0, 32)
+[node name="DamageArea" type="Area2D" parent="Tilemaps/Wall_break/Breakable" unique_id=1487517572]
 position = Vector2(0, -112)
 collision_layer = 0
 collision_mask = 16
@@ -83,7 +69,7 @@ tile_set = ExtResource("1_qchbg")
 [node name="PlayerSpawn" parent="." unique_id=2011755480 instance=ExtResource("4_mm0a5")]
 position = Vector2(-135, 614)
 
-[node name="LevelBounds" type="LevelBounds" parent="." unique_id=942564952]
+[node name="LevelBounds" type="LevelBounds" parent="." unique_id=538603897]
 width = 2592.0
 height = 654.0
 z_index = 256
@@ -93,8 +79,7 @@ position = Vector2(-678, 0)
 z_index = 1
 position = Vector2(1188, 224)
 
-[node name="Switch" parent="." unique_id=1731027950 node_paths=PackedStringArray("door") instance=ExtResource("5_mm0a5")]
-door = NodePath("../Door")
+[node name="Switch" parent="." unique_id=1731027950 instance=ExtResource("5_mm0a5")]
 z_index = 1
 position = Vector2(1858, 134)
 
@@ -113,8 +98,6 @@ z_index = 2
 position = Vector2(424, 582)
 
 [node name="Dummy" parent="Props" unique_id=1311069845 instance=ExtResource("6_mrac1")]
-shake_count = 6
-particles = Array[HitParticleSetting]([ExtResource("7_2bfhc"), ExtResource("8_osidk"), SubResource("HitParticleSetting_x1amm")])
 position = Vector2(543, 232)
 
 [node name="Crate" parent="Props" unique_id=258319214 instance=ExtResource("9_2q4k0")]
@@ -141,8 +124,6 @@ position = Vector2(79, 597)
 position = Vector2(219, 617)
 
 [node name="Dummy2" parent="Props" unique_id=234615559 instance=ExtResource("6_mrac1")]
-shake_count = 6
-particles = Array[HitParticleSetting]([ExtResource("7_2bfhc"), ExtResource("8_osidk"), SubResource("HitParticleSetting_x1amm")])
 position = Vector2(962, 617)
 
 [node name="SpikeDummy2" parent="Props" unique_id=1574296994 instance=ExtResource("10_j30dx")]
@@ -155,9 +136,7 @@ position = Vector2(216, 472)
 z_index = 1
 position = Vector2(1089, 227.99998)
 
-[node name="AudioTrigger" type="AudioTrigger" parent="." unique_id=1101924828]
-stream = ExtResource("7_emj6c")
-effect_type = "SMALL"
+[node name="AudioTrigger" type="Node" parent="." unique_id=1101924828]
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="." unique_id=992577274]
 enabled = false
@@ -171,37 +150,27 @@ blend_mode = 2
 position = Vector2(124, 200)
 
 [node name="AbilityPickup2" parent="Abilities" unique_id=190117752 instance=ExtResource("19_q6c7b")]
-ability_type = "Slam"
 position = Vector2(172, 200)
 
 [node name="AbilityPickup3" parent="Abilities" unique_id=519765447 instance=ExtResource("19_q6c7b")]
-ability_type = "Dash"
 position = Vector2(219, 200)
 
 [node name="AbilityPickup4" parent="Abilities" unique_id=1658632162 instance=ExtResource("19_q6c7b")]
-ability_type = "MorphRoll"
 position = Vector2(264, 200)
 
 [node name="Slime" parent="." unique_id=1102321141 instance=ExtResource("19_x2tju")]
-hp = 8.0
 z_index = 1
 position = Vector2(1684, 193)
 
 [node name="Slime_ground" parent="." unique_id=1644424825 instance=ExtResource("19_x2tju")]
-hp = 8.0
-face_right_on_start = false
-hit = null
-death = null
 z_index = 1
 position = Vector2(1494, 386)
 
 [node name="SlimeStandard" parent="." unique_id=581637104 instance=ExtResource("20_x2tju")]
-health = 50.0
 z_index = 1
 position = Vector2(1725, 290)
 
 [node name="Nega Pink Boss Box" parent="." unique_id=999774271 instance=ExtResource("20_x2tju")]
-health = 50.0
 z_index = 1
 position = Vector2(-418, 613.91)
 
@@ -211,7 +180,7 @@ tile_map_data = PackedByteArray("AAD9/xIAAAAAAAsAAAD9/xMAAAAIAAoAAAD+/xMAAAAEAAw
 enabled = false
 tile_set = ExtResource("1_qchbg")
 
-[node name="BossOrchestractor" type="BossOrchestractor" parent="." unique_id=156053423 node_paths=PackedStringArray("boss", "door")]
+[node name="BossOrchestractor" type="BossOrchestractor" parent="." unique_id=1339391246 node_paths=PackedStringArray("boss", "door")]
 boss = NodePath("../NegaHero")
 audio = ExtResource("21_wm6m6")
 door = NodePath("../BossRoomLocker")
@@ -222,10 +191,10 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BossOrchestractor" unique_id=465990923]
 z_index = 1
-position = Vector2(-412, 441)
+position = Vector2(-325, 441)
 shape = SubResource("RectangleShape2D_ifow5")
 debug_color = Color(0.42215183, 0.6023615, 0.16786098, 0.41960785)
 
 [node name="NegaHero" parent="." unique_id=695850978 instance=ExtResource("23_vwj6b")]
 z_index = 2
-position = Vector2(-516, 614)
+position = Vector2(-476, 614)

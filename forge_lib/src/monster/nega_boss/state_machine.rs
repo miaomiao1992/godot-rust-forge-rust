@@ -86,7 +86,7 @@ impl BossStateMachine {
     pub fn enter_next_state(&mut self, next_state: BossState) {
         if let Some(mut state_node) = self.get_state_node(next_state) {
             if self.is_debug {
-                godot_print!("Boss 进入状态: {:?}", next_state);
+                godot_print!("Boss 进入状态: {:?}", state_node.get_name());
             }
             state_node.try_call_deferred("entered", &[]).ok();
             self.current_state = Some(state_node);
@@ -109,6 +109,9 @@ pub(crate) enum BossState {
     Attack,
     Death,
     Hurt,
+    Jump,
+    Fall,
+    Dash,
 }
 
 impl From<BossState> for &str {
@@ -119,6 +122,9 @@ impl From<BossState> for &str {
             BossState::Attack => "Attack",
             BossState::Death => "Death",
             BossState::Hurt => "Hurt",
+            BossState::Jump => "Jump",
+            BossState::Fall => "Fall",
+            BossState::Dash => "Dash",
         }
     }
 }

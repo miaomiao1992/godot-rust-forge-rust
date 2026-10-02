@@ -5,9 +5,7 @@ use godot::{
 };
 
 use crate::{
-    entities::audio_tirgger::AudioEffectType,
-    message::Message,
-    monster::{enemy::Enemy, nega_boss::NegaBoss},
+    entities::audio_tirgger::AudioEffectType, message::Message, monster::nega_boss::NegaBoss,
     player::Player,
 };
 

@@ -1,5 +1,7 @@
 use godot::{
-    classes::{AnimationPlayer, Area2D, CharacterBody2D, ICharacterBody2D, Sprite2D},
+    classes::{
+        AnimationPlayer, Area2D, CharacterBody2D, CollisionShape2D, ICharacterBody2D, Sprite2D,
+    },
     init::is_editor_hint,
     prelude::*,
 };
@@ -13,9 +15,12 @@ use crate::{
 
 pub(self) mod attack;
 pub(self) mod boss_state;
+pub(self) mod dash;
 pub(self) mod death;
+pub(self) mod fall;
 pub(self) mod hurt;
 pub(self) mod idle;
+pub(self) mod jump;
 pub(self) mod state_machine;
 pub(self) mod walk;
 
@@ -33,17 +38,26 @@ pub(crate) struct NegaBoss {
     #[init(node = "%Sprite2D")]
     body: OnReady<Gd<Sprite2D>>,
 
+    #[init(node = "%CollisionShape2D")]
+    collider: OnReady<Gd<CollisionShape2D>>,
+
     #[init(val = None)]
     target: Option<Gd<Player>>,
 
     #[init(node = "%AnimationPlayer")]
     anim: OnReady<Gd<AnimationPlayer>>,
 
+    #[export]
+    #[init(val = 48.0)]
+    height_detect: f32,
+
     #[export_group(name = "Bind")]
     #[export]
     state_machine: OnEditor<Gd<BossStateMachine>>,
     #[export]
     damage: OnEditor<Gd<DamageArea>>,
+    #[export]
+    attack: OnEditor<Gd<AttackArea>>,
 
     #[export_group(name = "Health")]
     #[export]
@@ -57,6 +71,15 @@ pub(crate) struct NegaBoss {
     #[init(val = false)]
     #[var(no_set, get = is_in_attack_range)]
     in_attack_range: bool,
+
+    #[export_group(name = "Dash")]
+    #[export]
+    #[init(val = 1.0)]
+    dash_cool_time: f32,
+
+    #[export]
+    #[init(val = 0.0)]
+    dashed_time: f32,
 }
 
 #[godot_api]
@@ -89,7 +112,15 @@ impl ICharacterBody2D for NegaBoss {
             .emit(self.hp, self.max_hp);
     }
 
-    fn physics_process(&mut self, _delta: f64) {
+    fn physics_process(&mut self, delta: f64) {
+        if self.dashed_time > 0.0 {
+            self.dashed_time -= delta as f32;
+        }
+        if !self.base().is_on_floor() {
+            let mut velocity = self.base().get_velocity();
+            velocity += self.base().get_gravity() * delta as f32;
+            self.base_mut().set_velocity(velocity);
+        }
         self.base_mut().move_and_slide();
     }
 }
@@ -115,13 +146,50 @@ impl NegaBoss {
             .travel(state_machine::BossState::Hurt);
     }
 
+    pub fn not_in_dash_cooldown(&self) -> bool {
+        self.dashed_time <= 0.0
+    }
+
+    #[func]
+    pub fn set_dash_time(&mut self) {
+        self.dashed_time = self.dash_cool_time;
+    }
+
     pub fn get_health_stats(&self) -> (f32, f32) {
         (self.hp, self.max_hp)
     }
 
     #[func]
     pub fn set_damage_disable(&mut self, v: bool) {
-        self.damage.set_monitoring(!v);
+        if !v {
+            let id = self.base().instance_id();
+            let timeout = self
+                .base()
+                .get_tree()
+                .create_timer(0.2)
+                .signals()
+                .timeout()
+                .to_future();
+
+            godot::task::spawn(async move {
+                timeout.await;
+
+                if let Ok(mut boss) = Gd::<NegaBoss>::try_from_instance_id(id) {
+                    boss.bind_mut().set_damage_enabled();
+                }
+            });
+        } else {
+            self.damage.set_monitoring(!v);
+        }
+    }
+
+    pub fn set_damage_enabled(&mut self) {
+        self.damage.set_monitoring(true);
+    }
+
+    #[func]
+    pub fn set_collider_disable(&mut self, v: bool) {
+        self.collider.set_disabled(v);
     }
 
     #[func]
@@ -158,6 +226,63 @@ impl NegaBoss {
         self.target.clone()
     }
 
+    pub fn is_player_on_above_floor(&self) -> bool {
+        if let Some(player) = self.target.as_ref()
+            && player.is_on_floor()
+        {
+            if !self.in_attack_range {
+                let player_pos = player.get_global_position();
+                let pos = self.base().get_global_position();
+                if (pos.x - player_pos.x).abs() <= 32.0
+                    && (player_pos.y - pos.y).abs() > self.height_detect
+                {
+                    // godot_print!("检测玩家站在了平台上");
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    pub fn is_player_on_below_floor(&self) -> bool {
+        if let Some(player) = self.target.as_ref()
+            && player.is_on_floor()
+        {
+            if !self.in_attack_range {
+                let player_pos = player.get_global_position();
+                let pos = self.base().get_global_position();
+
+                if player_pos.y - pos.y > self.height_detect {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    pub fn make_shadow(&mut self) {
+        if let Some(mut root) = self.base().get_tree().get_root() {
+            let mut shadow_body = self.body.duplicate_node();
+            let pos = self.base().get_global_position();
+            shadow_body.set_global_position(pos);
+            root.add_child(&shadow_body);
+            let mut tween = self.base_mut().create_tween();
+            // modulate
+            let color = self.body.get_modulate();
+            tween.tween_property(
+                &shadow_body,
+                "modulate",
+                &color.with_alpha(0.0).to_variant(),
+                0.3,
+            );
+            godot_print!("生成shadow");
+            tween.tween_callback(&Callable::from_fn("on_shadow_finished", move |_| {
+                godot_print!("销毁Shaodw");
+                shadow_body.call_deferred("queue_free", &[]);
+            }));
+        }
+    }
+
     pub fn play_anim(&mut self, anim_name: &str) {
         if self.anim.has_animation(anim_name) {
             self.anim.play_ex().name(anim_name).done();
@@ -175,8 +300,10 @@ impl NegaBoss {
     pub fn update_direction(&mut self, new_dir: Vector2) {
         if new_dir.x > 0.0 {
             self.body.set_scale(Vector2::new(1.0, 1.0));
+            self.attack.set_scale(Vector2::new(1.0, 1.0));
         } else if new_dir.x < 0.0 {
             self.body.set_scale(Vector2::new(-1.0, 1.0));
+            self.attack.set_scale(Vector2::new(-1.0, 1.0));
         }
     }
 }

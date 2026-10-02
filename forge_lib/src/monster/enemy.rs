@@ -137,6 +137,8 @@ impl Enemy {
             }
         }
     }
+
+    #[allow(dead_code)]
     pub fn get_health_stats(&self) -> (f32, f32) {
         if let Some(board) = self.blackboard.as_ref() {
             return (board.bind().get_health(), self.health);

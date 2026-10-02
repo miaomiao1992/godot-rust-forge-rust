@@ -1,4 +1,4 @@
-use godot::{global::godot_print, obj::WithBaseField};
+use godot::obj::WithBaseField;
 
 use crate::states::{
     PlayerState, event::StateEvent, fall::FallState, idle::IdelState, slam::SlamState,
@@ -28,7 +28,7 @@ impl PlayerState for DashState {
         self.effect_time = self.effect_time_gap;
         let speed = player.speed * 2.0;
         let dir = player.get_face_direction();
-        godot_print!("Dash: {speed}, Dir: {dir}");
+        // godot_print!("Dash: {speed}, Dir: {dir}");
         let color = player.base().get_modulate();
         player.base_mut().set_modulate(color.with_alpha(0.2));
         player.set_horizontal_speed(speed * dir);
