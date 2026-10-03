@@ -58,7 +58,9 @@ impl BossDash {
     }
 
     #[func]
-    fn exited(&mut self) {}
+    fn exited(&mut self) {
+        self.get_agent().call_deferred("set_dash_time", &[]);
+    }
 
     #[func]
     fn update(&mut self, delta: f64) -> Variant {

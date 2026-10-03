@@ -3,7 +3,7 @@ use std::collections::VecDeque;
 use godot::classes::node::ProcessMode;
 use godot::classes::object::ConnectFlags;
 use godot::classes::{
-    AnimationPlayer, CharacterBody2D, CollisionShape2D, Engine, ICharacterBody2D, Input,
+    AnimationPlayer, CharacterBody2D, CollisionShape2D, ColorRect, Engine, ICharacterBody2D, Input,
     InputEvent, InputEventKey, Light2D, Os, ShapeCast2D, Sprite2D,
 };
 use godot::global::Key;
@@ -69,6 +69,11 @@ pub struct Player {
 
     #[export]
     sounds: Option<Gd<SoundSource>>,
+
+    #[export]
+    invincible_duration: f32,
+    invincible_time: f32,
+    invincible_bubble: Option<Gd<ColorRect>>,
 }
 
 #[godot_api]
@@ -87,7 +92,7 @@ impl ICharacterBody2D for Player {
             invincible_timer: 0.0,
             coyote_timer: 0.0,
             coyote_duration: 0.08,
-            hp: 5.0,
+            hp: 20.0,
             max_hp: 20.0,
             double_jump: false,
             dash: false,
@@ -101,6 +106,9 @@ impl ICharacterBody2D for Player {
             attack_area: None,
             sounds: None,
             slam_attack: None,
+            invincible_duration: 4.0,
+            invincible_time: 0.0,
+            invincible_bubble: None,
         };
         // player.switch_state(IdelState::new());
         godot_print!("Rust 玩家已经初始化");
@@ -117,6 +125,7 @@ impl ICharacterBody2D for Player {
         self.light = self.base().try_get_node_as::<Light2D>("PointLight2D");
         self.attack_area = self.base().try_get_node_as::<AttackArea>("%AttackArea");
         self.slam_attack = self.base().try_get_node_as::<AttackArea>("%SlamAttackArea");
+        self.invincible_bubble = self.base().try_get_node_as::<ColorRect>("%ColorRect");
         self.animation_player = self
             .base()
             .try_get_node_as::<AnimationPlayer>("AnimationPlayer");
@@ -190,10 +199,14 @@ impl ICharacterBody2D for Player {
 
     fn process(&mut self, _delta: f64) {
         self.update_direction();
+        self.update_invincible_bubble();
     }
 
     fn physics_process(&mut self, delta: f64) {
         let dt = delta as f32;
+        if self.invincible_time > 0.0 {
+            self.invincible_time -= dt;
+        }
         let input = Input::singleton();
 
         for action in &["jump", "attack", "down", "dash", "action"] {
@@ -390,6 +403,16 @@ impl Player {
         false
     }
 
+    fn update_invincible_bubble(&mut self) {
+        if let Some(bubble) = self.invincible_bubble.as_mut() {
+            if self.invincible_time > 0.0 {
+                bubble.set_visible(true);
+            } else {
+                bubble.set_visible(false);
+            }
+        }
+    }
+
     fn update_direction(&mut self) {
         let input = Input::singleton();
         let x_axis = input.get_axis("left", "right");
@@ -551,6 +574,10 @@ impl Player {
 
     #[func]
     pub fn take_damage(&mut self, _pos: Vector2, dir: Vector2, damage: Gd<AttackArea>) {
+        if self.invincible_time > 0.0 {
+            //无敌时间
+            return;
+        }
         // godot_print!("你敢扎我: {damage}");
         let damage = damage.bind().get_damage();
         let next_velocity = Vector2::splat(self.speed * 0.8) * dir.normalized();
@@ -561,6 +588,11 @@ impl Player {
         });
         let next_hp = (self.hp - damage).clamp(0.0, self.max_hp);
         Message::singleton().signals().camera_shake().emit(10.0);
+
+        if next_hp > 0.0 {
+            self.invincible_time = self.invincible_duration;
+        }
+
         self.set_hp(next_hp);
     }
 

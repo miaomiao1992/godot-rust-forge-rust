@@ -31,7 +31,7 @@ impl ICanvasLayer for SceneManager {
     fn ready(&mut self) {
         self.base_mut().call_deferred("init_scene", &[]);
         if let Some(ref mut tree) = self.base().get_tree_or_null() {
-            godot_print!("拦截关闭");
+            // godot_print!("拦截关闭");
             tree.set_auto_accept_quit(false);
         }
 
@@ -90,7 +90,7 @@ impl SceneManager {
     }
 
     fn exit_window(&mut self) {
-        godot_print!("关闭窗口");
+        // godot_print!("关闭窗口");
         self.base().get_tree().quit();
     }
 

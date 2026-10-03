@@ -43,11 +43,13 @@ impl BossHurt {
         let delta = delta as f32;
         self.duration -= delta;
         if self.duration <= 0.0 {
-            let (hp, ..) = self.get_agent().bind().get_health_stats();
+            let (hp, max_hp) = self.get_agent().bind().get_health_stats();
             if hp <= 0.0 {
                 return "Death".to_variant();
             }
-
+            if (hp / max_hp) < 0.5 && !self.get_agent().bind().is_in_fly_slam_cooldown() {
+                return "Fly".to_variant();
+            }
             return "Idle".to_variant();
         }
 

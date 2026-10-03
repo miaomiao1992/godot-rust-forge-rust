@@ -32,6 +32,8 @@ impl BossDeath {
         self.duration -= delta;
 
         if self.duration <= 0.0 {
+            let pos = self.get_agent().get_global_position();
+            self.get_agent().signals().death().emit(pos);
             self.get_agent().call_deferred("queue_free", &[]);
         }
         Variant::nil()

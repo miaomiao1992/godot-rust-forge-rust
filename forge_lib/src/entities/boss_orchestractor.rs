@@ -22,6 +22,10 @@ pub(crate) struct BossOrchestractor {
 
     #[export]
     door: OnEditor<Gd<TileMapLayer>>,
+
+    #[export]
+    #[init(val = 1.0)]
+    delay_time: f32,
 }
 
 #[godot_api]
@@ -52,7 +56,7 @@ impl BossOrchestractor {
             let time = self
                 .base()
                 .get_tree()
-                .create_timer(2.0)
+                .create_timer(self.delay_time as f64)
                 .signals()
                 .timeout()
                 .to_future();

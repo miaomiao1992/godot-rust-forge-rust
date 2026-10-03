@@ -112,6 +112,9 @@ pub(crate) enum BossState {
     Jump,
     Fall,
     Dash,
+    Fly,
+    Slam,
+    Recover,
 }
 
 impl From<BossState> for &str {
@@ -125,6 +128,9 @@ impl From<BossState> for &str {
             BossState::Jump => "Jump",
             BossState::Fall => "Fall",
             BossState::Dash => "Dash",
+            BossState::Fly => "Fly",
+            BossState::Slam => "Slam",
+            BossState::Recover => "Recover",
         }
     }
 }

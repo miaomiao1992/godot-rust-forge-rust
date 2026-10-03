@@ -18,6 +18,13 @@ impl BossAttack {
     fn entered(&mut self) {
         self.play_anim("attack");
         self.get_agent().set_velocity(Vector2::ZERO);
+        if let Some(player) = self.get_target() {
+            let dir = self
+                .get_agent()
+                .get_global_position()
+                .direction_to(player.get_global_position());
+            self.get_agent().bind_mut().update_direction(dir);
+        }
         self.duration = self.get_anim_length("attack");
     }
 

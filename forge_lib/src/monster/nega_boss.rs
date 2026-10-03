@@ -7,7 +7,7 @@ use godot::{
 };
 
 use crate::{
-    entities::{attack::AttackArea, damage::DamageArea},
+    entities::{attack::AttackArea, damage::DamageArea, enery_wave::EnegryWave},
     message::Message,
     monster::nega_boss::state_machine::BossStateMachine,
     player::Player,
@@ -18,9 +18,12 @@ pub(self) mod boss_state;
 pub(self) mod dash;
 pub(self) mod death;
 pub(self) mod fall;
+pub(self) mod fly;
 pub(self) mod hurt;
 pub(self) mod idle;
 pub(self) mod jump;
+pub(self) mod recover;
+pub(self) mod slam;
 pub(self) mod state_machine;
 pub(self) mod walk;
 
@@ -46,6 +49,9 @@ pub(crate) struct NegaBoss {
 
     #[init(node = "%AnimationPlayer")]
     anim: OnReady<Gd<AnimationPlayer>>,
+
+    #[init(val = 1.0)]
+    gravity_scale: f32,
 
     #[export]
     #[init(val = 48.0)]
@@ -80,6 +86,20 @@ pub(crate) struct NegaBoss {
     #[export]
     #[init(val = 0.0)]
     dashed_time: f32,
+
+    #[export_group(name = "Fly")]
+    #[export]
+    #[init(val = 5.0)]
+    fly_slam_cool_time: f32,
+
+    #[init(val = 0.0)]
+    fly_slam_time: f32,
+
+    #[export_group(name = "Enegry")]
+    #[export]
+    brust: OnEditor<Gd<PackedScene>>,
+    #[export]
+    wave: OnEditor<Gd<PackedScene>>,
 }
 
 #[godot_api]
@@ -116,9 +136,14 @@ impl ICharacterBody2D for NegaBoss {
         if self.dashed_time > 0.0 {
             self.dashed_time -= delta as f32;
         }
+
+        if self.fly_slam_time > 0.0 {
+            self.fly_slam_time -= delta as f32;
+        }
+
         if !self.base().is_on_floor() {
             let mut velocity = self.base().get_velocity();
-            velocity += self.base().get_gravity() * delta as f32;
+            velocity += self.gravity_scale * self.base().get_gravity() * delta as f32;
             self.base_mut().set_velocity(velocity);
         }
         self.base_mut().move_and_slide();
@@ -129,6 +154,9 @@ impl ICharacterBody2D for NegaBoss {
 impl NegaBoss {
     #[signal]
     pub fn health_change(hp: f32, max_hp: f32);
+
+    #[signal]
+    pub fn death(pos: Vector2);
 
     #[func]
     fn take_damage(&mut self, _pos: Vector2, _dir: Vector2, a: Gd<AttackArea>) {
@@ -146,8 +174,30 @@ impl NegaBoss {
             .travel(state_machine::BossState::Hurt);
     }
 
+    #[func]
+    pub fn heal_health(&mut self, amount: f32) {
+        let hp = self.hp + amount;
+        let max_hp = self.max_hp;
+        self.hp = hp;
+        self.signals().health_change().emit(hp, max_hp);
+    }
+
     pub fn not_in_dash_cooldown(&self) -> bool {
         self.dashed_time <= 0.0
+    }
+
+    #[func]
+    pub fn set_fly_slam(&mut self) {
+        self.fly_slam_time = self.fly_slam_cool_time;
+    }
+
+    pub fn is_in_fly_slam_cooldown(&self) -> bool {
+        self.fly_slam_time > 0.0
+    }
+
+    #[func]
+    pub fn set_gravity_scale(&mut self, v: f32) {
+        self.gravity_scale = v;
     }
 
     #[func]
@@ -161,30 +211,12 @@ impl NegaBoss {
 
     #[func]
     pub fn set_damage_disable(&mut self, v: bool) {
-        if !v {
-            let id = self.base().instance_id();
-            let timeout = self
-                .base()
-                .get_tree()
-                .create_timer(0.2)
-                .signals()
-                .timeout()
-                .to_future();
-
-            godot::task::spawn(async move {
-                timeout.await;
-
-                if let Ok(mut boss) = Gd::<NegaBoss>::try_from_instance_id(id) {
-                    boss.bind_mut().set_damage_enabled();
-                }
-            });
-        } else {
-            self.damage.set_monitoring(!v);
-        }
+        self.damage.set_monitoring(!v);
     }
 
-    pub fn set_damage_enabled(&mut self) {
-        self.damage.set_monitoring(true);
+    #[func]
+    pub fn set_attack_disable(&mut self, v: bool) {
+        self.attack.set_monitorable(!v);
     }
 
     #[func]
@@ -217,7 +249,7 @@ impl NegaBoss {
 
     fn on_player_exited(&mut self, player: Gd<Node2D>) {
         if player.try_cast::<Player>().is_ok() {
-            godot_print!("玩家消失了");
+            // godot_print!("玩家消失了");
             self.target = None;
         }
     }
@@ -237,7 +269,7 @@ impl NegaBoss {
                     && (player_pos.y - pos.y).abs() > self.height_detect
                 {
                     // godot_print!("检测玩家站在了平台上");
-                    return true;
+                    return pos.y > player_pos.y;
                 }
             }
         }
@@ -252,8 +284,10 @@ impl NegaBoss {
                 let player_pos = player.get_global_position();
                 let pos = self.base().get_global_position();
 
-                if player_pos.y - pos.y > self.height_detect {
-                    return true;
+                if (pos.x - player_pos.x).abs() <= 64.0
+                    && (player_pos.y - pos.y).abs() > self.height_detect
+                {
+                    return pos.y < player_pos.y;
                 }
             }
         }
@@ -280,6 +314,26 @@ impl NegaBoss {
                 godot_print!("销毁Shaodw");
                 shadow_body.call_deferred("queue_free", &[]);
             }));
+        }
+    }
+
+    pub fn create_enegry_wave(&mut self) {
+        let pos = self.base().get_global_position();
+        if let Some(mut root) = self.base().get_owner() {
+            let mut brust_node = self.brust.instantiate_as::<Sprite2D>();
+            brust_node.set_global_position(pos);
+            root.add_child(&brust_node);
+
+            let mut wave_r = self.wave.instantiate_as::<EnegryWave>();
+            wave_r.bind_mut().set_face_to_right(true);
+            wave_r.set_global_position(pos);
+            root.add_child(&wave_r);
+
+            let mut wave_l = self.wave.instantiate_as::<EnegryWave>();
+            wave_l.set_global_position(pos);
+            wave_l.set_scale(Vector2::new(-1.0, 1.0));
+            wave_l.bind_mut().set_face_to_right(false);
+            root.add_child(&wave_l);
         }
     }
 

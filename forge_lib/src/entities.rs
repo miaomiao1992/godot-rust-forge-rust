@@ -8,6 +8,7 @@ pub mod door;
 pub mod dummy;
 pub mod dust_effect;
 pub mod edge_detector;
+pub mod enery_wave;
 pub mod hit_particle;
 pub mod input_hints;
 pub mod interactive;

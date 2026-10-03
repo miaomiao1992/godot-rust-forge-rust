@@ -3,9 +3,16 @@
 [ext_resource type="Texture2D" uid="uid://dbp88peqb21sp" path="res://sprites/hero.png" id="1_3vyb7"]
 [ext_resource type="SoundSource" uid="uid://tdncrkvd7ik8" path="res://player_sound_source.tres" id="1_qlg0r"]
 [ext_resource type="AudioStream" uid="uid://bp40i4d6mohgs" path="res://general/audio/attack.wav" id="2_dqkch"]
+[ext_resource type="Shader" uid="uid://dhuio3105h6lh" path="res://shaders/invincible.gdshader" id="2_fjrip"]
 [ext_resource type="PackedScene" uid="uid://bn2rpmna2457n" path="res://general/input_hints/input_hints.tscn" id="2_g2els"]
 [ext_resource type="Texture2D" uid="uid://ci52r66xsjf4k" path="res://general/sprites/weapon_smears.png" id="2_qhqgy"]
 [ext_resource type="AudioStream" uid="uid://bu6nufnyw5plm" path="res://general/audio/aargh.wav" id="6_tuyoq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wvhbo"]
+shader = ExtResource("2_fjrip")
+shader_parameter/radius = 0.5
+shader_parameter/width = 0.698000033155
+shader_parameter/hight_light_center = Vector2(0, 0)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hddm4"]
 radius = 8.0
@@ -908,6 +915,15 @@ collision_layer = 4
 collision_mask = 3
 floor_snap_length = 16.0
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=695842370]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_wvhbo")
+offset_left = -30.0
+offset_top = -57.0
+offset_right = 28.0
+offset_bottom = 1.0
+
 [node name="Camera2D" type="PlayerCamera" parent="." unique_id=1910265905]
 process_mode = 3
 position = Vector2(0, -37)
@@ -942,11 +958,11 @@ position = Vector2(0, -40)
 texture = ExtResource("1_3vyb7")
 hframes = 16
 vframes = 4
-metadata/_edit_lock_ = true
 
 [node name="AttackArea" type="AttackArea" parent="Sprite2D" unique_id=1221782761]
 audio = ExtResource("2_dqkch")
 unique_name_in_owner = true
+visible = false
 position = Vector2(0, 10)
 collision_layer = 16
 collision_mask = 0
