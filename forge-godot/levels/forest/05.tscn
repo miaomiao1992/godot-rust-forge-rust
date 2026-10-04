@@ -34,8 +34,8 @@ position = Vector2(592, 33)
 [node name="LevelTransition4" parent="." unique_id=338396303 instance=ExtResource("2_7q72b")]
 size = 4
 location = "Bottom"
-target_level = "uid://bowrs0wcn2oy6"
-target_area_name = "5-1"
+target_level = "uid://bf0t1owvrnpka"
+target_area_name = "5-boss"
 position = Vector2(67, 253)
 scale = Vector2(-4, -1)
 

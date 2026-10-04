@@ -1,8 +1,6 @@
 use godot::{global::randf, prelude::*};
 
-use crate::{
-    entities::item_pickup::ItemPickUp, monster::nega_boss::NegaBoss, resource::drop_rare::DropRare,
-};
+use crate::{entities::item_pickup::ItemPickUp, resource::drop_rare::DropRare};
 
 #[derive(GodotClass)]
 #[class(init, base = Node)]
@@ -10,7 +8,7 @@ pub(crate) struct MagicDrop {
     base: Base<Node>,
 
     #[export]
-    agent: OnEditor<Gd<NegaBoss>>,
+    agent: OnEditor<Gd<Node>>,
 
     #[export]
     #[init(val = Array::default())]
@@ -24,14 +22,15 @@ pub(crate) struct MagicDrop {
 #[godot_api]
 impl INode for MagicDrop {
     fn ready(&mut self) {
+        let node = self.to_gd();
         self.agent
-            .signals()
-            .death()
-            .connect_other(&*self, Self::create_drop);
+            .connect("death", &Callable::from_object_method(&node, "create_drop"));
     }
 }
 
+#[godot_api]
 impl MagicDrop {
+    #[func]
     fn create_drop(&mut self, center: Vector2) {
         // godot_print!("生成掉落");
         for c in self.drop_items.iter_shared() {
@@ -44,7 +43,10 @@ impl MagicDrop {
                     drop_item.apply_impulse(Vector2::new((randf() as f32) * self.range, -30.0));
 
                     if let Some(mut root) = self.base().get_tree().get_root() {
+                        // godot_print!("添加入tree");
                         root.add_child(&drop_item);
+                    } else {
+                        // godot_print!("没有场景了");
                     }
                 }
             }

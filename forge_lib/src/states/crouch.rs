@@ -1,5 +1,3 @@
-use godot::prelude::*;
-
 use crate::states::{
     PlayerState, crouch_attack::CrouchAttack, dash::DashState, event::StateEvent, fall::FallState,
     idle::IdelState, jump::JumpState,
@@ -16,8 +14,11 @@ impl CrouchState {
 }
 
 impl PlayerState for CrouchState {
+    fn get_name(&self) -> String {
+        "PlayerCrouchState".to_owned()
+    }
     fn enter(&mut self, player: &mut crate::player::Player) {
-        godot_print!("[进入] 状态 蹲伏");
+        // godot_print!("[进入] 状态 蹲伏");
         if self.fix_to_end {
             player.anim_seek_to_end("crouch");
         } else {
@@ -26,7 +27,7 @@ impl PlayerState for CrouchState {
     }
 
     fn exit(&mut self, _player: &mut crate::player::Player) {
-        godot_print!("[状态] 退出 蹲伏");
+        // godot_print!("[状态] 退出 蹲伏");
     }
 
     fn handle_event(

@@ -17,6 +17,9 @@ impl MorphState {
 }
 
 impl PlayerState for MorphState {
+    fn get_name(&self) -> String {
+        "PlayerMorphState".to_owned()
+    }
     fn enter(&mut self, player: &mut crate::player::Player) {
         self.time = self.duration;
         player.play_anim("ball");

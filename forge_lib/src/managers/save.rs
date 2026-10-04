@@ -151,7 +151,7 @@ impl SaveManager {
 
     #[func]
     pub fn save_game(&mut self) {
-        godot_print!("save a point");
+        // godot_print!("save a point");
         if let Some(main_loop) = Engine::singleton().get_main_loop()
             && let Ok(tree) = main_loop.try_cast::<SceneTree>()
         {

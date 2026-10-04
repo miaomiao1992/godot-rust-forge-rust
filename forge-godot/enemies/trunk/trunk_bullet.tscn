@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bqdr2ptnpvf7p"]
+
+[ext_resource type="Texture2D" uid="uid://x48fr68215jp" path="res://enemies/trunk/assets/Bullet.png" id="1_q3s1x"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wvhbo"]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ifow5"]
+radius = 5.0990195
+
+[node name="PeaBullet" type="Bullet" unique_id=1925843495]
+z_index = 2
+texture = ExtResource("1_q3s1x")
+
+[node name="AttackArea" type="AttackArea" parent="." unique_id=771349896]
+collision_layer = 64
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=357684872]
+shape = SubResource("CircleShape2D_wvhbo")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=471490139]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 3
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1763813558]
+shape = SubResource("CircleShape2D_ifow5")
+debug_color = Color(0.6832642, 0.49233252, 0.28276414, 0.41960785)

@@ -74,6 +74,9 @@ pub struct Player {
     invincible_duration: f32,
     invincible_time: f32,
     invincible_bubble: Option<Gd<ColorRect>>,
+
+    #[export]
+    is_show_log: bool,
 }
 
 #[godot_api]
@@ -109,6 +112,7 @@ impl ICharacterBody2D for Player {
             invincible_duration: 4.0,
             invincible_time: 0.0,
             invincible_bubble: None,
+            is_show_log: false,
         };
         // player.switch_state(IdelState::new());
         godot_print!("Rust 玩家已经初始化");
@@ -258,6 +262,9 @@ impl ICharacterBody2D for Player {
             if let Some(mut state) = self.current_state.take() {
                 match state.handle_event(self, event) {
                     Some(new_state) => {
+                        if self.is_show_log {
+                            godot_print!("{:?} -> {:?}", state.get_name(), new_state.get_name());
+                        }
                         state.exit(self);
                         self.switch_state_with_box(new_state);
                     }
@@ -532,7 +539,7 @@ impl Player {
     }
 
     pub fn play_anim(&self, name: &str) {
-        godot_print!("播放动画: {}", name);
+        // godot_print!("播放动画: {}", name);
         match self.animation_player.clone() {
             Some(mut anim) if anim.has_animation(name) => {
                 anim.play_ex().name(name).done();

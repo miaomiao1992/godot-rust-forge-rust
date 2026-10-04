@@ -19,15 +19,18 @@ impl HurtState {
 }
 
 impl PlayerState for HurtState {
+    fn get_name(&self) -> String {
+        "PlayerHurtState".to_owned()
+    }
     fn enter(&mut self, player: &mut crate::player::Player) {
-        godot_print!("[状态] 进入受伤");
+        // godot_print!("[状态] 进入受伤");
         player.play_anim("hurt");
         // player.set_horizontal_speed(0.0);
         player.start_timer("hurt_timer", self.duration);
     }
 
     fn exit(&mut self, _player: &mut crate::player::Player) {
-        godot_print!("[退出] 状态 受伤");
+        // godot_print!("[退出] 状态 受伤");
     }
 
     fn handle_event(

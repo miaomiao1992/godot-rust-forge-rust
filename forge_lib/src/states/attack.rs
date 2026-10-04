@@ -22,15 +22,18 @@ impl AttackState {
 }
 
 impl PlayerState for AttackState {
+    fn get_name(&self) -> String {
+        "PlayerAttackState".to_owned()
+    }
     fn enter(&mut self, player: &mut crate::player::Player) {
-        godot_print!("[状态] 进入攻击 (连击{})", self.combo);
+        // godot_print!("[状态] 进入攻击 (连击{})", self.combo);
         player.set_attack_enabled(true);
         player.play_anim(&format!("attack_{}", self.combo));
         player.start_timer("attack_timer", self.duration);
         // self.hitbox_spawned= false;
     }
     fn exit(&mut self, player: &mut crate::player::Player) {
-        godot_print!("[退出] 状态 攻击");
+        // godot_print!("[退出] 状态 攻击");
         player.set_attack_enabled(false);
     }
     fn handle_event(

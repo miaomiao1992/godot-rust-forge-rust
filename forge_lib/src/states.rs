@@ -18,6 +18,9 @@ pub mod slam;
 use event::StateEvent;
 
 pub trait PlayerState: Send + Sync {
+    fn get_name(&self) -> String {
+        "PlayerUndefinedName".to_owned()
+    }
     fn enter(&mut self, _player: &mut Player) {}
 
     fn exit(&mut self, _player: &mut Player) {}

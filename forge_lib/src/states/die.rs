@@ -9,6 +9,9 @@ impl DieState {
 }
 
 impl PlayerState for DieState {
+    fn get_name(&self) -> String {
+        "PlayerDieState".to_owned()
+    }
     fn enter(&mut self, player: &mut crate::player::Player) {
         player.set_horizontal_speed(0.0);
         player.play_anim("die");

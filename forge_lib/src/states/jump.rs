@@ -17,7 +17,7 @@ pub struct JumpState {
 
 impl JumpState {
     pub fn new(v: f32, count: u32) -> Self {
-        godot_print!("new Jump state: v = {}, c = {}", v, count);
+        // godot_print!("new Jump state: v = {}, c = {}", v, count);
         Self {
             velocity: v,
             jump_count: count,
@@ -27,8 +27,11 @@ impl JumpState {
 }
 
 impl PlayerState for JumpState {
+    fn get_name(&self) -> String {
+        "PlayerJumpState".to_owned()
+    }
     fn enter(&mut self, player: &mut crate::player::Player) {
-        godot_print!("[状态] 进入跳跃 (第{}段)", self.jump_count + 1);
+        // godot_print!("[状态] 进入跳跃 (第{}段)", self.jump_count + 1);
         let pos = player.base().get_global_position();
         let mut v = player.base().get_velocity();
         v.y = self.velocity;
@@ -41,7 +44,7 @@ impl PlayerState for JumpState {
             .emit(VisualEffectType::Jump, pos);
     }
     fn exit(&mut self, _player: &mut crate::player::Player) {
-        godot_print!("[退出] 状态 跳跃");
+        // godot_print!("[退出] 状态 跳跃");
     }
     fn handle_event(
         &mut self,

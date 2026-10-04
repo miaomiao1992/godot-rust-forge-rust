@@ -14,12 +14,15 @@ pub struct RunState {
 }
 
 impl PlayerState for RunState {
+    fn get_name(&self) -> String {
+        "PlayerRunState".to_owned()
+    }
     fn enter(&mut self, player: &mut crate::player::Player) {
-        godot_print!("[状态] 进入 奔跑");
+        // godot_print!("[状态] 进入 奔跑");
         player.play_anim("run");
     }
     fn exit(&mut self, _player: &mut crate::player::Player) {
-        godot_print!("[退出] 奔跑 状态");
+        // godot_print!("[退出] 奔跑 状态");
     }
     fn handle_event(
         &mut self,

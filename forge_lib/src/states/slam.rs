@@ -1,7 +1,4 @@
-use godot::{
-    global::godot_print,
-    obj::{Singleton, WithBaseField},
-};
+use godot::obj::{Singleton, WithBaseField};
 
 use crate::{
     managers::visual_effect::VisualEffectType,
@@ -24,15 +21,18 @@ impl SlamState {
 }
 
 impl PlayerState for SlamState {
+    fn get_name(&self) -> String {
+        "PlayerSlamState".to_owned()
+    }
     fn enter(&mut self, player: &mut crate::player::Player) {
-        godot_print!("进入下砸");
+        // godot_print!("进入下砸");
         self.effect_time = self.effect_delay;
         player.play_anim("slam");
         player.set_slam_active(true);
     }
 
     fn exit(&mut self, player: &mut crate::player::Player) {
-        godot_print!("退出下砸");
+        // godot_print!("退出下砸");
         player.set_slam_active(false);
         player.play_sound_effect("slam");
         let pos = player.base().get_global_position();

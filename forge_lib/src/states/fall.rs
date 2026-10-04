@@ -23,14 +23,17 @@ impl FallState {
 }
 
 impl PlayerState for FallState {
+    fn get_name(&self) -> String {
+        "PlayerFallState".to_owned()
+    }
     fn enter(&mut self, _player: &mut crate::player::Player) {
-        godot_print!("[状态] 进入 跌落");
+        // godot_print!("[状态] 进入 跌落");
         self.time = self.duration;
         _player.play_anim("fall");
     }
 
     fn exit(&mut self, _player: &mut crate::player::Player) {
-        godot_print!("[退出] 状态 跌落");
+        // godot_print!("[退出] 状态 跌落");
     }
 
     fn handle_event(

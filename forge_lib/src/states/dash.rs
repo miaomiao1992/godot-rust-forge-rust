@@ -23,6 +23,9 @@ impl DashState {
 }
 
 impl PlayerState for DashState {
+    fn get_name(&self) -> String {
+        "PlayerDashState".to_owned()
+    }
     fn enter(&mut self, player: &mut crate::player::Player) {
         self.time = self.duration;
         self.effect_time = self.effect_time_gap;

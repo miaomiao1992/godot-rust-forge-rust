@@ -1,4 +1,4 @@
-use godot::{classes::Input, global::godot_print, obj::Singleton};
+use godot::{classes::Input, obj::Singleton};
 
 use crate::states::{
     PlayerState, attack::AttackState, crouch::CrouchState, dash::DashState, event::StateEvent,
@@ -16,14 +16,17 @@ impl IdelState {
 }
 
 impl PlayerState for IdelState {
+    fn get_name(&self) -> String {
+        "PlayerIdleState".to_owned()
+    }
     fn enter(&mut self, _player: &mut crate::player::Player) {
-        godot_print!("[状态] 进入空闲");
+        // godot_print!("[状态] 进入空闲");
         _player.set_attack_enabled(false);
         _player.set_horizontal_speed(0.0);
         _player.play_anim("idle");
     }
     fn exit(&mut self, _player: &mut crate::player::Player) {
-        godot_print!("[退出] 空闲");
+        // godot_print!("[退出] 空闲");
     }
     fn handle_event(
         &mut self,

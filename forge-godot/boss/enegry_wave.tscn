@@ -80,6 +80,6 @@ position = Vector2(28, -64)
 shape = SubResource("RectangleShape2D_wvhbo")
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=1889887332]
-position = Vector2(42, 0)
-color = Color(1, 0.015686275, 0.34117648, 1)
+position = Vector2(46, -64)
+scale = Vector2(2.046875, 1.65625)
 texture = SubResource("GradientTexture2D_wvhbo")

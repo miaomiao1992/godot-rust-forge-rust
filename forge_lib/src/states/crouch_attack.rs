@@ -1,4 +1,4 @@
-use godot::global::{godot_print, wrapi};
+use godot::global::wrapi;
 
 use crate::states::{
     PlayerState, crouch::CrouchState, dash::DashState, event::StateEvent, fall::FallState,
@@ -29,8 +29,11 @@ impl CrouchAttack {
 }
 
 impl PlayerState for CrouchAttack {
+    fn get_name(&self) -> String {
+        "PlayerCrouchAttackState".to_owned()
+    }
     fn enter(&mut self, player: &mut crate::player::Player) {
-        godot_print!("蹲伏攻击: {} 段", self.combo);
+        // godot_print!("蹲伏攻击: {} 段", self.combo);
         player.play_anim(format!("crouch_attack_{}", self.combo).as_str());
         self.time = 0.0;
         self.comboing = false;
@@ -39,7 +42,7 @@ impl PlayerState for CrouchAttack {
 
     fn exit(&mut self, player: &mut crate::player::Player) {
         player.set_attack_enabled(false);
-        godot_print!("退出蹲伏攻击: {} 段", self.combo);
+        // godot_print!("退出蹲伏攻击: {} 段", self.combo);
     }
 
     fn handle_event(

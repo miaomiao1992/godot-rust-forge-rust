@@ -3,6 +3,7 @@ pub mod attack;
 pub mod audio_tirgger;
 pub mod boss_orchestractor;
 pub mod breakable;
+pub mod bullet;
 pub mod damage;
 pub mod door;
 pub mod dummy;
