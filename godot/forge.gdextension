@@ -1,0 +1,36 @@
+[configuration]
+entry_symbol = "gdext_rust_init"
+compatibility_minimum = 4.1
+reloadable = true
+
+[libraries]
+linux.debug.x86_64 =     "res://../rust/target/debug/libforge.so"
+linux.release.x86_64 =   "res://../rust/target/release/libforge.so"
+windows.debug.x86_64 =   "res://../rust/target/x86_64-pc-windows-gnu/debug/forge.dll"
+windows.release.x86_64 = "res://../rust/target/x86_64-pc-windows-gnu/release/forge.dll"
+macos.debug =            "res://../rust/target/debug/libforge.dylib"
+macos.release =          "res://../rust/target/release/libforge.dylib"
+macos.debug.arm64 =      "res://../rust/target/debug/libforge.dylib"
+macos.release.arm64 =    "res://../rust/target/release/libforge.dylib"
+
+
+[icons]
+Player = "res://sprites/icon/map_node.svg"
+LevelBounds = "res://general/icons/level_bounds.svg"
+LevelTransition = "res://general/icons/level_transition.svg"
+PlayerSpawn = "res://general/icons/player_spawn.svg"
+SavePoint = "res://general/icons/save_point.svg"
+Door = "res://general/icons/door.svg"
+MapNode = "res://general/icons/map_node.svg"
+Switch = "res://general/icons/switch.svg"
+AudioTrigger = "res://general/icons/music_trigger.svg"
+AttackArea = "res://general/icons/attack_area.svg"
+DamageArea = "res://general/icons/damage_area.svg"
+Breakable = "res://general/icons/breakable.svg"
+Enemy = "res://enemies/icons/enemy.svg"
+NegaBoss = "res://enemies/icons/enemy.svg"
+DecisionEngine = "uid://c1n0pga1ldaax"
+InputHints = "uid://dt5hfts5yjnec"
+EdgeDetector = "uid://byueff8mcljrw"
+AbilityPickup = "uid://c2lkxyeas67sp"
+BossOrchestractor = "uid://cqtk7lo2nt5wk"
