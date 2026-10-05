@@ -338,12 +338,13 @@ shape = SubResource("RectangleShape2D_wvhbo")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1918603979]
 unique_name_in_owner = true
+z_index = 1
 scale = Vector2(-1, 1)
 sprite_frames = SubResource("SpriteFrames_wvhbo")
 animation = &"run"
 autoplay = "idle"
 centered = false
-offset = Vector2(-60, -38)
+offset = Vector2(-60, -37)
 metadata/_edit_lock_ = true
 
 [node name="EdgeDetector" type="EdgeDetector" parent="AnimatedSprite2D" unique_id=1983841319]

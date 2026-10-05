@@ -271,7 +271,7 @@ position = Vector2(1242, 228)
 
 [node name="Trunk" parent="Monsters" unique_id=1682358103 instance=ExtResource("16_rdeg0")]
 z_index = 1
-position = Vector2(1655, 198)
+position = Vector2(1655, 190)
 
 [node name="Trunk2" parent="Monsters" unique_id=1837089167 instance=ExtResource("16_rdeg0")]
 z_index = 1
@@ -315,4 +315,4 @@ position = Vector2(1281, 388)
 
 [node name="Bunny" parent="Monsters" unique_id=812700500 instance=ExtResource("28_2etec")]
 dir = -1.0
-position = Vector2(1446, 388)
+position = Vector2(1489, 308)

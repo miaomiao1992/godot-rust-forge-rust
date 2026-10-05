@@ -253,12 +253,12 @@ impl Monster {
         self.on_player_miss_completed();
     }
 
-    fn apply_gravity(&mut self, delta: f32) {
+    fn apply_gravity(&mut self, _delta: f32) {
         if !self.base().is_on_floor() {
             let gravity = self.base().get_gravity();
             let mut velocity = self.base().get_velocity();
             velocity.x = 0.0;
-            velocity.y += gravity.y * delta;
+            velocity.y += gravity.y;
 
             self.base_mut().set_velocity(velocity);
         }
