@@ -173,3 +173,6 @@ unique_name_in_owner = true
 [node name="death" type="SlimeDeathState" parent="StateMachine" unique_id=705408699 groups=["state"]]
 
 [node name="stun" type="SlimeStunState" parent="StateMachine" unique_id=1161425613 groups=["state"]]
+
+[node name="InteractObserver" type="InteractObserver" parent="." unique_id=1536136615]
+only_entered = true

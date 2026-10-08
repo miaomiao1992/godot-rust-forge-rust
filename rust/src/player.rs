@@ -558,7 +558,7 @@ impl Player {
     }
 
     pub fn set_slam_active(&mut self, v: bool) {
-        godot_print!("设置slam attack, {v}");
+        // godot_print!("设置slam attack, {v}");
         if let Some(mut attack) = self.slam_attack.clone() {
             attack.set_monitorable(v);
         }

@@ -282,3 +282,6 @@ drop_items = Array[DropRare]([SubResource("DropRare_rdeg0")])
 position = Vector2(0, -27)
 energy = 0.3
 texture = SubResource("GradientTexture2D_wvhbo")
+
+[node name="InteractObserver" type="InteractObserver" parent="." unique_id=467301257]
+only_entered = true

@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://bgctrm15cdudn"]
+
+[ext_resource type="PackedScene" uid="uid://codaw8csccyln" path="res://ecs/entity_compose.tscn" id="1_5pch4"]
+[ext_resource type="Texture2D" uid="uid://dbp88peqb21sp" path="res://sprites/hero.png" id="2_os1nf"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wvhbo"]
+radius = 2.0
+height = 18.0
+
+[node name="PlayerCompose" unique_id=60572367 node_paths=PackedStringArray("input") instance=ExtResource("1_5pch4")]
+input = NodePath("InputControler")
+collision_layer = 4
+collision_mask = 3
+
+[node name="Sprite" parent="." index="0" unique_id=172666006]
+texture = ExtResource("2_os1nf")
+offset = Vector2(0, -40)
+hframes = 16
+vframes = 4
+
+[node name="CollisionShape2D" parent="." index="7" unique_id=1398946488]
+position = Vector2(0, -2)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_wvhbo")
+
+[node name="InputControler" type="InputControler" parent="." index="8" unique_id=292388802]

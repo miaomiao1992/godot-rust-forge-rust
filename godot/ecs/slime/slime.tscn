@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://cl4jr5qjdyjds"]
+
+[ext_resource type="PackedScene" uid="uid://codaw8csccyln" path="res://ecs/entity_compose.tscn" id="1_601yt"]
+[ext_resource type="Texture2D" uid="uid://jtv35tgbpj7w" path="res://enemies/slime/slime.png" id="2_mp2jf"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ui2f1"]
+radius = 1.9999999
+height = 20.0
+
+[node name="Slime" unique_id=860613590 node_paths=PackedStringArray("input") instance=ExtResource("1_601yt")]
+input = NodePath("AIInputControler")
+collision_layer = 8
+collision_mask = 3
+
+[node name="Sprite" parent="." index="0" unique_id=172666006]
+texture = ExtResource("2_mp2jf")
+centered = false
+offset = Vector2(-24, -32)
+hframes = 6
+vframes = 3
+
+[node name="EdgeRayCast" parent="." index="1" unique_id=854685167]
+modulate = Color(0.9647059, 0.44313726, 0.44313726, 1)
+position = Vector2(6, 0)
+target_position = Vector2(0, 12)
+
+[node name="WallRayCast" parent="." index="2" unique_id=58675787]
+modulate = Color(0.4509804, 1, 0.03529412, 1)
+position = Vector2(0, -11)
+target_position = Vector2(30, 0)
+
+[node name="AbilityTurnBack" type="AbilityTurnBack" parent="AbilityControler" parent_id_path=PackedInt32Array(390993064) index="1" unique_id=1482441210 node_paths=PackedStringArray("agent", "wall_ray")]
+agent = NodePath("../..")
+wall_ray = NodePath("../../WallRayCast")
+
+[node name="CollisionShape2D" parent="." index="7" unique_id=1398946488]
+position = Vector2(0, -2)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_ui2f1")
+
+[node name="AIInputControler" type="AIInputControler" parent="." index="8" unique_id=621074111 node_paths=PackedStringArray("wall_ray")]
+wall_ray = NodePath("../WallRayCast")
+walk_duration = 2.0

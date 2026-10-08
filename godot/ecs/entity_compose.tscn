@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://codaw8csccyln"]
+
+[node name="EntityCompose" type="EntityCompose" unique_id=60572367 node_paths=PackedStringArray("input", "wall_ray", "sprite", "movement", "ability", "animation")]
+input = NodePath("")
+wall_ray = NodePath("WallRayCast")
+sprite = NodePath("Sprite")
+movement = NodePath("MovementControler")
+ability = NodePath("AbilityControler")
+animation = NodePath("AnimationControler")
+collision_layer = 0
+collision_mask = 0
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=172666006]
+
+[node name="EdgeRayCast" type="RayCast2D" parent="." unique_id=854685167]
+
+[node name="WallRayCast" type="RayCast2D" parent="." unique_id=58675787]
+
+[node name="AnimationControler" type="AnimationControler" parent="." unique_id=1034696523]
+
+[node name="AbilityControler" type="AbilityControler" parent="." unique_id=390993064]
+
+[node name="AbilityJump" type="AbilityJump" parent="AbilityControler" unique_id=756703928 node_paths=PackedStringArray("agent") groups=["ability"]]
+agent = NodePath("../..")
+jumping_stength = 400.0
+
+[node name="MovementControler" type="MovementControler" parent="." unique_id=116278333]
+
+[node name="MovementIdle" type="MovementIdle" parent="MovementControler" unique_id=1806121066 node_paths=PackedStringArray("agent") groups=["movement"]]
+agent = NodePath("../..")
+
+[node name="MovementWalk" type="MovementWalk" parent="MovementControler" unique_id=620713502 node_paths=PackedStringArray("agent") groups=["movement"]]
+agent = NodePath("../..")
+
+[node name="MovementGravity" type="MovementGravity" parent="MovementControler" unique_id=910989510 node_paths=PackedStringArray("agent") groups=["movement"]]
+agent = NodePath("../..")
+
+[node name="Dectecter" type="Area2D" parent="." unique_id=46825696]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Dectecter" unique_id=47083641]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1398946488]

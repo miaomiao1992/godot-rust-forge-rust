@@ -42,6 +42,9 @@ Player=""
 Transition_Marker="传输点"
 LevelTheme="关卡样式分类"
 state="敌人状态组"
+breakable="可破坏分组"
+movement=""
+ability=""
 
 [gui]
 

@@ -141,3 +141,6 @@ position = Vector2(0, -6)
 rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_wvhbo")
 debug_color = Color(0.32292473, 0.70196074, 0.5036599, 0.41960785)
+
+[node name="InteractObserver" type="InteractObserver" parent="." unique_id=156901040]
+only_entered = true

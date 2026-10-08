@@ -12,6 +12,7 @@ pub mod edge_detector;
 pub mod enery_wave;
 pub mod hit_particle;
 pub mod input_hints;
+pub mod interact_observer;
 pub mod interactive;
 pub(crate) mod item_pickup;
 pub mod light;

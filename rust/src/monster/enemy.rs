@@ -179,7 +179,7 @@ impl Enemy {
     }
     fn on_player_exited(&mut self) {
         if let Some(blackboard) = self.blackboard.as_mut() {
-            godot_print!("丢失玩家");
+            // godot_print!("丢失玩家");
             blackboard.bind_mut().set_target(None);
         }
     }

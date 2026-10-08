@@ -28,6 +28,7 @@
 [ext_resource type="PackedScene" uid="uid://il5linvmnkig" path="res://enemies/chameleon/chameleon.tscn" id="26_reluu"]
 [ext_resource type="PackedScene" uid="uid://c12ml0clh3rrf" path="res://enemies/angry_pig/angry_pig.tscn" id="27_csshy"]
 [ext_resource type="PackedScene" uid="uid://cir0ghtoerhos" path="res://enemies/bunny/bunny.tscn" id="28_2etec"]
+[ext_resource type="PackedScene" uid="uid://d1c3hjcxqdma5" path="res://enemies/rino/rino.tscn" id="29_34hvl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wvhbo"]
 size = Vector2(64, 224)
@@ -88,7 +89,7 @@ tile_set = ExtResource("1_qchbg")
 particles = Array[HitParticleSetting]([ExtResource("3_x2tju"), ExtResource("4_wm6m6")])
 break_audio = ExtResource("5_wm6m6")
 
-[node name="DamageArea" type="DamageArea" parent="Tilemaps/Wall_break/Breakable" unique_id=1574003343]
+[node name="DamageArea" type="DamageArea" parent="Tilemaps/Wall_break/Breakable" unique_id=1574003343 groups=["breakable"]]
 position = Vector2(0, -112)
 collision_layer = 0
 collision_mask = 16
@@ -309,10 +310,12 @@ position = Vector2(-337, 166)
 z_index = 1
 position = Vector2(1725, 290)
 
-[node name="AngryPig" parent="Monsters" unique_id=1146945661 instance=ExtResource("27_csshy")]
-z_index = 1
-position = Vector2(1281, 388)
-
 [node name="Bunny" parent="Monsters" unique_id=812700500 instance=ExtResource("28_2etec")]
 dir = -1.0
 position = Vector2(1489, 308)
+
+[node name="AngryPig" parent="Monsters" unique_id=68502568 instance=ExtResource("27_csshy")]
+position = Vector2(1265, 388)
+
+[node name="Rino" parent="Monsters" unique_id=1876863137 instance=ExtResource("29_34hvl")]
+position = Vector2(1665, 388)

@@ -70,6 +70,7 @@ libraries/ = SubResource("AnimationLibrary_unf2i")
 autoplay = &"default"
 
 [node name="AttackArea" type="AttackArea" parent="." unique_id=2117973909]
+damage = 3.0
 collision_layer = 64
 collision_mask = 0
 monitoring = false

@@ -48,11 +48,10 @@ pub(self) mod layers {
 impl DamageArea {
     fn on_attacked(&mut self, area: Gd<Area2D>) {
         if let Ok(attack_area) = area.try_cast::<AttackArea>() {
+            if self.check_attack_vaild(&attack_area).is_err() {
+                return;
+            }
             if let Some(ref mut parent) = self.base().get_parent() {
-                if self.check_attack_vaild(&attack_area).is_err() {
-                    // godot_print!("中间有阻挡啊");
-                    return;
-                }
                 let attack_pos = self.base().get_global_position() + self.offset;
                 let pos = attack_area.get_global_position().direction_to(attack_pos);
                 if parent.has_method("take_damage") {
@@ -88,6 +87,7 @@ impl DamageArea {
         }
     }
 
+    #[allow(dead_code)]
     fn check_attack_vaild(&self, attack: &Gd<AttackArea>) -> Result<(), ()> {
         if let Some(to) = self.base().get_owner()
             && let Some(from) = attack.get_owner()
@@ -134,6 +134,16 @@ impl DamageArea {
             // godot_print!("{:?}", result.keys_array());
             if result.is_empty() {
                 return Ok(());
+            }
+
+            let Some(collider_var) = result.get("collider") else {
+                return Err(());
+            };
+
+            if let Ok(collider) = collider_var.try_to::<Gd<Node>>() {
+                if collider.is_in_group("breakable") {
+                    return Ok(());
+                }
             }
         }
         Err(())

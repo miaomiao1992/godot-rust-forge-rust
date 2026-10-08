@@ -406,3 +406,6 @@ texture = SubResource("GradientTexture2D_1v8i8")
 [node name="Timer" type="Timer" parent="." unique_id=87827729]
 wait_time = 3.0
 one_shot = true
+
+[node name="InteractObserver" type="InteractObserver" parent="." unique_id=126190024]
+only_entered = true

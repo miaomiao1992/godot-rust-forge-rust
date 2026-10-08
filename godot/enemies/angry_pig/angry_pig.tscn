@@ -235,6 +235,7 @@ body = NodePath("AnimatedSprite2D")
 sight = NodePath("AnimatedSprite2D/Area2D")
 sight_ray = NodePath("AnimatedSprite2D/RayCast2D")
 damage_area = NodePath("DamageArea")
+z_index = 1
 collision_layer = 0
 collision_mask = 259
 
@@ -299,3 +300,6 @@ drop_items = Array[DropRare]([SubResource("DropRare_pnfnp")])
 position = Vector2(0, -27)
 energy = 0.3
 texture = SubResource("GradientTexture2D_7togh")
+
+[node name="InteractObserver" type="InteractObserver" parent="." unique_id=1888453996]
+only_entered = true
