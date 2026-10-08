@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://codaw8csccyln"]
 
-[node name="EntityCompose" type="EntityCompose" unique_id=60572367 node_paths=PackedStringArray("input", "wall_ray", "sprite", "movement", "ability", "animation")]
+[node name="EntityCompose" type="EntityCompose" unique_id=60572367 node_paths=PackedStringArray("input", "sprite", "movement", "ability", "animation")]
 input = NodePath("")
-wall_ray = NodePath("WallRayCast")
 sprite = NodePath("Sprite")
 movement = NodePath("MovementControler")
 ability = NodePath("AbilityControler")
@@ -11,10 +10,6 @@ collision_layer = 0
 collision_mask = 0
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=172666006]
-
-[node name="EdgeRayCast" type="RayCast2D" parent="." unique_id=854685167]
-
-[node name="WallRayCast" type="RayCast2D" parent="." unique_id=58675787]
 
 [node name="AnimationControler" type="AnimationControler" parent="." unique_id=1034696523]
 

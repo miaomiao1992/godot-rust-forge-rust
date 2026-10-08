@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cl4jr5qjdyjds" path="res://ecs/slime/slime.tscn" id="1_ui2f1"]
 [ext_resource type="PackedScene" uid="uid://bgctrm15cdudn" path="res://ecs/player/player_compose.tscn" id="2_qmerp"]
+[ext_resource type="PackedScene" uid="uid://c4mrftrasgixy" path="res://ecs/slime/brave_slime.tscn" id="3_4ohgl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wvhbo"]
 size = Vector2(497, 20)
@@ -9,30 +10,101 @@ size = Vector2(497, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ifow5"]
 size = Vector2(20, 283)
 
-[node name="Node2D" type="Node2D" unique_id=716338348]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_abi3o"]
+size = Vector2(149, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ohgl"]
+size = Vector2(138, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8x71t"]
+size = Vector2(45, 39)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dg2l2"]
+size = Vector2(45, 70.5)
+
+[node name="ECSWorld" type="Node2D" unique_id=716338348]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=430435738]
 collision_mask = 0
 
 [node name="ColorRect" type="ColorRect" parent="StaticBody2D" unique_id=1936132939]
-offset_top = 237.0
+offset_top = 258.0
 offset_right = 488.0
-offset_bottom = 255.0
+offset_bottom = 276.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1460876407]
-position = Vector2(242, 249)
+position = Vector2(242, 268)
 shape = SubResource("RectangleShape2D_wvhbo")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=1005120841]
-position = Vector2(0, 131.5)
+position = Vector2(-9, 131.5)
 shape = SubResource("RectangleShape2D_ifow5")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D" unique_id=298146829]
-position = Vector2(488, 132)
+position = Vector2(490, 132)
 shape = SubResource("RectangleShape2D_ifow5")
 
-[node name="PlayerCompose" parent="." unique_id=60572367 instance=ExtResource("2_qmerp")]
-position = Vector2(127, 210)
+[node name="AirFloor" type="StaticBody2D" parent="." unique_id=2103072628]
+collision_layer = 2
+collision_mask = 0
+
+[node name="ColorRect" type="ColorRect" parent="AirFloor" unique_id=140157911]
+offset_left = 167.0
+offset_top = 165.0
+offset_right = 315.0
+offset_bottom = 181.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AirFloor" unique_id=294831382]
+position = Vector2(240.5, 173)
+shape = SubResource("RectangleShape2D_abi3o")
+one_way_collision = true
+
+[node name="AirFloorTop" type="StaticBody2D" parent="." unique_id=1921074449]
+collision_layer = 2
+collision_mask = 0
+
+[node name="ColorRect" type="ColorRect" parent="AirFloorTop" unique_id=976141726]
+offset_left = 54.0
+offset_top = 82.0
+offset_right = 189.0
+offset_bottom = 98.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AirFloorTop" unique_id=412973088]
+position = Vector2(122, 90)
+shape = SubResource("RectangleShape2D_4ohgl")
+one_way_collision = true
+
+[node name="BlockOnFloor" type="StaticBody2D" parent="." unique_id=2129760139]
+collision_mask = 0
+
+[node name="ColorRect" type="ColorRect" parent="BlockOnFloor" unique_id=1665078410]
+offset_left = 102.0
+offset_top = 220.0
+offset_right = 146.0
+offset_bottom = 259.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BlockOnFloor" unique_id=1035143139]
+position = Vector2(124, 239)
+shape = SubResource("RectangleShape2D_8x71t")
+
+[node name="BlockOnFloorHigh" type="StaticBody2D" parent="." unique_id=1124810599]
+collision_mask = 0
+
+[node name="ColorRect" type="ColorRect" parent="BlockOnFloorHigh" unique_id=1596641761]
+offset_left = 402.0
+offset_top = 190.0
+offset_right = 446.0
+offset_bottom = 259.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BlockOnFloorHigh" unique_id=876569381]
+position = Vector2(424, 223.25)
+shape = SubResource("RectangleShape2D_dg2l2")
 
 [node name="Slime" parent="." unique_id=860613590 instance=ExtResource("1_ui2f1")]
-position = Vector2(340.09283, 196.52557)
+position = Vector2(257, 165)
+
+[node name="BraveSlime" parent="." unique_id=1022218299 instance=ExtResource("3_4ohgl")]
+position = Vector2(78, 82)
+
+[node name="PlayerCompose" parent="." unique_id=60572367 instance=ExtResource("2_qmerp")]
+position = Vector2(54, 258)

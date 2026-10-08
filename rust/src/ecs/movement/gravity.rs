@@ -1,6 +1,6 @@
 use godot::prelude::*;
 
-use crate::ecs::{EntityCompose, IInputControler, movement::IMovement};
+use crate::ecs::{DynInputControler, EntityCompose, movement::IMovement};
 
 #[derive(GodotClass)]
 #[class(init, base = Node)]
@@ -17,10 +17,10 @@ struct MovementGravity {
 
 #[godot_dyn]
 impl IMovement for MovementGravity {
-    fn should_run(&self, input: DynGd<Node, dyn IInputControler>) -> bool {
+    fn should_run(&self, input: DynInputControler) -> bool {
         !self.agent.is_on_floor()
     }
-    fn run(&mut self, input: DynGd<Node, dyn IInputControler>, delta: f64) {
+    fn run(&mut self, input: DynInputControler, delta: f64) {
         if self.agent.is_on_floor() {
             return;
         }

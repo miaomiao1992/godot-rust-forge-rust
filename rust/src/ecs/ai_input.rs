@@ -1,4 +1,4 @@
-use godot::{classes::RayCast2D, global::randf, prelude::*};
+use godot::{classes::RayCast2D, prelude::*};
 
 use crate::ecs::IInputControler;
 
@@ -7,8 +7,7 @@ use crate::ecs::IInputControler;
 pub enum AIInputState {
     #[default]
     Idle,
-    WalkRight,
-    WalkLeft,
+    Walk,
     Jump,
 }
 
@@ -21,6 +20,10 @@ pub struct AIInputControler {
     disabled: bool,
     #[export]
     wall_ray: OnEditor<Gd<RayCast2D>>,
+    #[export]
+    edge_ray: OnEditor<Gd<RayCast2D>>,
+    #[export]
+    jump_ray: OnEditor<Gd<RayCast2D>>,
 
     #[export]
     state: AIInputState,
@@ -31,82 +34,79 @@ pub struct AIInputControler {
     #[export]
     #[init(val = 5.0)]
     walk_duration: f32,
+    #[export]
+    #[init(val = 1.0)]
+    start_axis: f32,
 
     axis: f32,
-    time: f32,
     left_held: bool,
     right_held: bool,
+    jump_pressed: bool,
 }
 
-// impl INode for AIInputControler {
-//     fn ready(&mut self,) {
-//     }
-// }
+#[godot_api]
+impl INode for AIInputControler {
+    fn ready(&mut self) {
+        self.axis = self.start_axis;
+        if self.start_axis > 0.0 {
+            self.right_held = true;
+            self.state = AIInputState::Walk;
+        } else if self.start_axis < 0.0 {
+            self.left_held = true;
+            self.state = AIInputState::Walk;
+        }
+        self.update_dir();
+    }
+}
+
+impl AIInputControler {
+    fn update_dir(&mut self) {
+        let v = self.axis;
+        if v > 0.0 {
+            self.wall_ray.set_scale(Vector2::new(1.0, 1.0));
+            self.edge_ray.set_scale(Vector2::new(1.0, 1.0));
+        } else if v < 0.0 {
+            self.wall_ray.set_scale(Vector2::new(-1.0, 1.0));
+            self.edge_ray.set_scale(Vector2::new(-1.0, 1.0));
+        }
+    }
+}
 
 #[godot_dyn]
 impl IInputControler for AIInputControler {
+    fn set_axis(&mut self, v: f32) {
+        self.axis = v;
+        self.update_dir();
+    }
     fn get_axis(&self) -> f32 {
         self.axis
     }
 
+    fn set_left_held(&mut self, v: bool) {
+        self.left_held = v;
+    }
     fn get_left_held(&self) -> bool {
         self.left_held
+    }
+
+    fn set_right_held(&mut self, v: bool) {
+        self.right_held = v;
     }
 
     fn get_right_held(&self) -> bool {
         self.right_held
     }
 
+    fn get_jump_pressed(&self) -> bool {
+        self.jump_pressed
+    }
+
     fn input_physics(&mut self, delta: f64) {
-        let delta = delta as f32;
-
-        match self.state {
-            AIInputState::Idle => {
-                self.axis = 0.0;
-                self.left_held = false;
-                self.right_held = false;
-                self.time += delta;
-
-                if self.time >= self.idle_duration {
-                    self.time = 0.0;
-                    self.state = if randf() > 0.5 {
-                        AIInputState::WalkRight
-                    } else {
-                        AIInputState::WalkLeft
-                    };
-                }
+        self.jump_pressed = false;
+        if self.wall_ray.is_colliding() {
+            if !self.jump_ray.is_colliding() && !self.jump_pressed {
+                self.jump_pressed = true;
             }
-            AIInputState::WalkRight => {
-                self.axis = 1.0;
-                self.time += delta;
-                self.right_held = true;
-
-                if self.time >= self.idle_duration {
-                    self.time = 0.0;
-                    self.state = AIInputState::Idle;
-                }
-
-                if self.wall_ray.is_colliding() {
-                    self.axis = -1.0;
-                    self.state = AIInputState::WalkLeft;
-                }
-            }
-            AIInputState::WalkLeft => {
-                self.axis = -1.0;
-                self.time += delta;
-                self.left_held = true;
-
-                if self.time >= self.idle_duration {
-                    self.time = 0.0;
-                    self.state = AIInputState::Idle;
-                }
-
-                if self.wall_ray.is_colliding() {
-                    self.axis = 1.0;
-                    self.state = AIInputState::WalkRight;
-                }
-            }
-            _ => {}
         }
     }
 }

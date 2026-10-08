@@ -1,6 +1,6 @@
 use godot::prelude::*;
 
-use crate::ecs::{IInputControler, movement::MovementControler};
+use crate::ecs::{DynInputControler, movement::MovementControler};
 
 #[derive(GodotClass)]
 #[class(init, base = Node)]
@@ -9,6 +9,7 @@ pub struct AbilityControler {
     abilities: Array<DynGd<Node, dyn IAbility>>,
 }
 
+mod edge_back;
 mod jump;
 mod turn_back;
 
@@ -16,14 +17,14 @@ mod turn_back;
 impl AbilityControler {
     pub fn ability_physics(
         &mut self,
-        input: DynGd<Node, dyn IInputControler>,
+        input: &mut DynInputControler,
         movement: Gd<MovementControler>,
         delta: f64,
     ) {
         for mut ability in self.abilities.iter_shared() {
-            let input = input.clone();
+            let mut input = input.clone();
             if ability.dyn_bind().should_run(input.clone()) {
-                ability.dyn_bind_mut().run(input, delta);
+                ability.dyn_bind_mut().run(&mut input, delta);
             }
         }
     }
@@ -42,8 +43,8 @@ impl INode for AbilityControler {
 }
 
 pub(self) trait IAbility {
-    fn should_run(&self, input: DynGd<Node, dyn IInputControler>) -> bool {
+    fn should_run(&self, input: DynInputControler) -> bool {
         false
     }
-    fn run(&mut self, input: DynGd<Node, dyn IInputControler>, delta: f64) {}
+    fn run(&mut self, input: &mut DynInputControler, delta: f64) {}
 }

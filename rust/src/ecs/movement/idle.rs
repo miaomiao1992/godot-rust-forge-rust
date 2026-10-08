@@ -1,6 +1,6 @@
 use godot::prelude::*;
 
-use crate::ecs::{EntityCompose, IInputControler, movement::IMovement};
+use crate::ecs::{DynInputControler, EntityCompose, movement::IMovement};
 
 #[derive(GodotClass)]
 #[class(init, base = Node)]
@@ -12,10 +12,10 @@ struct MovementIdle {
 
 #[godot_dyn]
 impl IMovement for MovementIdle {
-    fn should_run(&self, input: DynGd<Node, dyn IInputControler>) -> bool {
+    fn should_run(&self, input: DynInputControler) -> bool {
         input.dyn_bind().get_axis() == 0.0 && self.agent.is_on_floor()
     }
-    fn run(&mut self, input: DynGd<Node, dyn IInputControler>, delta: f64) {
+    fn run(&mut self, input: DynInputControler, delta: f64) {
         // godot_print!("Movement Idle");
         self.agent.set_velocity(Vector2::ZERO);
     }

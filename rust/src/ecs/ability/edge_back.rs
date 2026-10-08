@@ -4,20 +4,20 @@ use crate::ecs::{DynInputControler, EntityCompose, ability::IAbility};
 
 #[derive(GodotClass)]
 #[class(init, base = Node)]
-struct AbilityTurnBack {
+struct AbilityEdgeBack {
     base: Base<Node>,
     #[export]
     agent: OnEditor<Gd<EntityCompose>>,
     #[export]
-    wall_ray: OnEditor<Gd<RayCast2D>>,
+    edge_ray: OnEditor<Gd<RayCast2D>>,
     #[export]
-    jump_ray: OnEditor<Gd<RayCast2D>>,
+    disabled: bool,
 }
 
 #[godot_dyn]
-impl IAbility for AbilityTurnBack {
+impl IAbility for AbilityEdgeBack {
     fn should_run(&self, input: DynInputControler) -> bool {
-        self.agent.is_on_floor() && self.wall_ray.is_colliding() && self.jump_ray.is_colliding()
+        self.agent.is_on_floor() && !self.edge_ray.is_colliding() && !self.disabled
     }
 
     fn run(&mut self, input: &mut DynInputControler, delta: f64) {

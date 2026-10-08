@@ -1,6 +1,6 @@
 use godot::{obj::WithBaseField, prelude::*};
 
-use crate::ecs::IInputControler;
+use crate::ecs::DynInputControler;
 
 mod gravity;
 mod idle;
@@ -28,7 +28,7 @@ impl INode for MovementControler {
 
 #[godot_api]
 impl MovementControler {
-    pub fn movement_physics(&mut self, input: DynGd<Node, dyn IInputControler>, delta: f64) {
+    pub fn movement_physics(&mut self, input: DynInputControler, delta: f64) {
         for mut movement in self.movements.iter_shared() {
             let input = input.clone();
             if movement.dyn_bind().should_run(input.clone()) {
@@ -39,8 +39,8 @@ impl MovementControler {
 }
 
 pub(self) trait IMovement {
-    fn should_run(&self, input: DynGd<Node, dyn IInputControler>) -> bool {
+    fn should_run(&self, input: DynInputControler) -> bool {
         false
     }
-    fn run(&mut self, input: DynGd<Node, dyn IInputControler>, delta: f64) {}
+    fn run(&mut self, input: DynInputControler, delta: f64) {}
 }

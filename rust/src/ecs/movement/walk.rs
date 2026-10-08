@@ -1,6 +1,6 @@
 use godot::prelude::*;
 
-use crate::ecs::{EntityCompose, IInputControler, movement::IMovement};
+use crate::ecs::{DynInputControler, EntityCompose, movement::IMovement};
 
 #[derive(GodotClass)]
 #[class(init, base = Node)]
@@ -16,12 +16,12 @@ struct MovementWalk {
 
 #[godot_dyn]
 impl IMovement for MovementWalk {
-    fn should_run(&self, input: DynGd<Node, dyn IInputControler>) -> bool {
+    fn should_run(&self, input: DynInputControler) -> bool {
         input.dyn_bind().get_axis() != 0.0
             && (input.dyn_bind().get_right_held() || input.dyn_bind().get_left_held())
-            && self.agent.is_on_floor()
+        // && self.agent.is_on_floor()
     }
-    fn run(&mut self, input: DynGd<Node, dyn IInputControler>, delta: f64) {
+    fn run(&mut self, input: DynInputControler, delta: f64) {
         let mut velocity = self.agent.get_velocity();
 
         let axis = input.dyn_bind().get_axis();
